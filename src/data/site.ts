@@ -1,12 +1,12 @@
 export const siteMeta = {
-  brand: "HL Bezerra",
-  legalName: "HL & Bezerra Consultoria e Assessoria",
+  brand: "HL & Bezerra",
+  legalName: "HL & Bezerra Advocacia",
   description:
-    "Consultoria e assessoria com estratégia, governança e visão de resultado para empresas que querem crescer com segurança.",
+    "Escritório de advocacia dedicado a defender direitos, proteger interesses e oferecer orientação jurídica com compromisso, clareza e excelência.",
   phone: "(00) 00000-0000",
   whatsapp: "https://wa.me/5500000000000",
   email: "contato@hlbezerra.com.br",
-  cta: "Fale com um especialista",
+  cta: "Falar com o escritório",
 };
 
 export type LeadSection = {
@@ -19,10 +19,10 @@ export type LeadSection = {
 export const leadSections: LeadSection[] = [
   {
     id: "leads",
-    eyebrow: "Retenção de leads",
-    title: "Leads qualificados, nutrição contínua e retorno previsível",
+    eyebrow: "Atendimento jurídico",
+    title: "Orientação clara para decidir com segurança",
     description:
-      "Trazemos uma camada prática de captação e relacionamento para transformar visitas em oportunidades reais: conteúdo, follow-up, prova social e chamadas de ação em todos os pontos decisivos.",
+      "Acompanhamos casos com escuta, análise cuidadosa e comunicação transparente, para que você entenda seus direitos, riscos e próximos passos sem improvisos.",
   },
 ];
 
@@ -33,10 +33,10 @@ export type LeadMagnet = {
 };
 
 export const leadMagnet: LeadMagnet = {
-  title: "Diagnóstico gratuito do seu negócio",
+  title: "Primeira conversa com o escritório",
   description:
-    "Receba uma leitura rápida de organização, indicadores e prioridades para sair do improviso com segurança.",
-  cta: "Agendar diagnóstico",
+    "Relate seu caso de forma reservada e receba orientação jurídica objetiva sobre o caminho a seguir, com clareza e compromisso.",
+  cta: "Solicitar atendimento",
 };
 
 export type Service = {
@@ -47,28 +47,39 @@ export type Service = {
 
 export const services: Service[] = [
   {
-    title: "Assessoria Estratégica",
-    description:
-      "Diagnóstico do negócio, planejamento e acompanhamento contínuo para decisões mais rápidas e alinhadas.",
-    bullets: ["Plano de ação", "Gestão de indicadores", "Comitê mensal"],
+    title: "Direito Civil",
+    description: "Atuação preventiva e contenciosa nas relações jurídicas, contratos, obrigações, responsabilidade civil e patrimônios.",
+    bullets: ["Contratos", "Responsabilidade civil", "Cobranças e indenizações"],
   },
   {
-    title: "Governança e Risco",
-    description:
-      "Estruturas claras de responsabilidade, processos e controles que reduzem incerteza e fortalecem confiança.",
-    bullets: ["Políticas internas", "Matriz de riscos", "Painel de controles"],
+    title: "Direito de Família",
+    description: "Orientação cuidadosa em divórcios, guarda, pensão, inventários e planejamento sucessório, com respeito e discrição.",
+    bullets: ["Guarda e visitação", "Alimentos", "Inventário"],
   },
   {
-    title: "Financeiro e Fluxo de Caixa",
-    description:
-      "Organização de previsões, metas e relatórios para o dono enxergar o negócio com clareza e agir com segurança.",
-    bullets: ["Projeção de caixa", "Margens e metas", "Decisões financeiras"],
+    title: "Direito do Trabalho",
+    description: "Defesa de direitos trabalhistas, acordos, verbas, rescisões e relações entre empregados e empregadores.",
+    bullets: ["Reclamações", "Acordos", "Assessoria a empregadores"],
   },
   {
-    title: "Assessoria Jurídica Empresarial",
-    description:
-      "Suporte consultivo e preventivo para contratos, sociedade, compliance e relações comerciais, com foco em segurança jurídica.",
-    bullets: ["Contratos e sociedade", "Prevenção de passivos", "Compliance e riscos"],
+    title: "Direito Penal",
+    description: "Acompanhamento jurídico em investigações, inquéritos, processos penais e medidas protetivas, com sigilo e firmeza.",
+    bullets: ["Defesa criminal", "Medidas protetivas", "Reparação"],
+  },
+  {
+    title: "Direito do Consumidor",
+    description: "Proteção contra práticas abusivas, produtos e serviços, cobranças indevidas e violações de direitos do consumidor.",
+    bullets: ["Cobranças indevidas", "Indenizações", "Negociações"],
+  },
+  {
+    title: "Direito Empresarial",
+    description: "Orientação jurídica para empresas em contratos, constituição societária, responsabilidade, conformidade e relações comerciais.",
+    bullets: ["Contratos", "Sociedades", "Conformidade"],
+  },
+  {
+    title: "Direito Previdenciário",
+    description: "Planejamento, revisões, benefícios e estratégias de proteção previdenciária para pessoas e empresas.",
+    bullets: ["Benefícios", "Planejamento", "Revisões"],
   },
 ];
 
@@ -79,24 +90,24 @@ export type Step = {
 
 export const method: Step[] = [
   {
-    title: "Diagnóstico",
+    title: "Escuta",
     description:
-      "Entendemos o momento real da empresa, dores, oportunidades e gargalos que mais impactam resultado.",
+      "Reunimos os fatos, documentos e preocupações do caso para entender o contexto real do cliente, com sigilo e atenção.",
   },
   {
-    title: "Plano",
+    title: "Análise",
     description:
-      "Montamos um plano objetivo, com prioridades, responsáveis e prazos, para tirar o time da inércia.",
+      "Interpretamos as questões jurídicas, identificamos riscos, direitos possíveis e caminhos mais adequados à situação.",
   },
   {
-    title: "Execução",
+    title: "Estratégia",
     description:
-      "Acompanhamos a implementação com ritos de gestão, métricas e ajustes contínuos.",
+      "Definimos a melhor orientação para o momento, com metas, prazos e comunicação clara sobre o que esperar a cada etapa.",
   },
   {
-    title: "Escala",
+    title: "Defesa",
     description:
-      "Consolidamos boas práticas e preparamos a empresa para crescer mantendo controle e previsibilidade.",
+      "Conduzimos a atuação com compromisso, responsabilidade profissional e proximidade contínua com o cliente.",
   },
 ];
 
@@ -107,19 +118,19 @@ export type Benefit = {
 
 export const benefits: Benefit[] = [
   {
-    title: "Visão do negócio",
+    title: "Proteção dos direitos",
     description:
-      "O dono volta a enxergar números, prioridades e decisões com clareza, sem depender de improviso.",
+      "Cada decisão é analisada sob o ponto de vista jurídico, para que seus interesses e direitos sejam defendidos com segurança.",
   },
   {
-    title: "Gestão com método",
+    title: "Relação de confiança",
     description:
-      "Processos e ritos de trabalho que reduzem retrabalho, ruído e dependência de pessoas-chave.",
+      "Trabalhamos com proximidade, transparência e linguagem acessível, mantendo o cliente informado em todas as etapas.",
   },
   {
-    title: "Resultado mais previsível",
+    title: "Excelência profissional",
     description:
-      "A empresa passa a operar com indicadores, metas e correção de rota em ciclos curtos.",
+      "Compromisso técnico, rigoroso e humano, com atuação cuidadosa que respeita a importância de cada caso.",
   },
 ];
 
@@ -129,20 +140,7 @@ export type Testimonial = {
   role: string;
 };
 
-export const testimonials: Testimonial[] = [
-  {
-    quote:
-      "Depois de alguns meses com a assessoria, a empresa ficou muito mais organizada e as decisões passaram a ser mais rápidas.",
-    name: "Cliente satisfeito",
-    role: "Empresário",
-  },
-  {
-    quote:
-      "O time ganhou método. Hoje temos mais clareza de caixa, metas e prioridade, o que reduziu bastante o improviso.",
-    name: "Cliente satisfeito",
-    role: "Diretor",
-  },
-];
+export const testimonials: Testimonial[] = [];
 
 export type FaqItem = {
   question: string;
@@ -151,18 +149,18 @@ export type FaqItem = {
 
 export const faqs: FaqItem[] = [
   {
-    question: "Para que tipo de empresa a HL Bezerra atende?",
+    question: "Como funciona a primeira conversa com o escritório?",
     answer:
-      "Atendemos pequenas e médias empresas que precisam de mais organização, previsibilidade e apoio estruturado na gestão.",
+      "Você relata sua situação de forma reservada. Nossa equipe orienta quais informações são relevantes e qual é o próximo passo mais adequado, com clareza e sem compromisso de contratação.",
   },
   {
-    question: "Como funciona o primeiro contato?",
+    question: "Quais áreas de atuação o escritório possui?",
     answer:
-      "Começamos por uma conversa de diagnóstico para entender momento, dores e objetivos da empresa. A partir disso, apresentamos um caminho de atuação.",
+      "Atuamos em Direito Civil, Direito de Família, Direito do Trabalho, Direito Penal, Direito do Consumidor, Direito Empresarial e Direito Previdenciário.",
   },
   {
-    question: "O quanto de tempo o empresário precisa dedicar?",
+    question: "Meu caso é urgente. Como consigo atendimento rápido?",
     answer:
-      "Depende da etapa do projeto, mas o foco é criar ritos enxutos para que o gestor participe com consistência, sem sobrecarregar a operação.",
+      "Priorizamos prazos jurídicos e a gravidade de cada demanda. Entre em contato pelo WhatsApp ou telefone para que possamos avaliar a urgência e indicar a orientação mais segura.",
   },
 ];

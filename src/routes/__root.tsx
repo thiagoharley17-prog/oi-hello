@@ -85,18 +85,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "HL Bezerra | Consultoria e Assessoria Empresarial" },
+      { title: "HL & Bezerra Advocacia | Escritório de Advocacia" },
       {
         name: "description",
         content:
-          "Consultoria, governança e assessoria jurídica empresarial para empresas que querem crescer com segurança, clareza e previsibilidade.",
+          "Escritório de advocacia dedicado a defender direitos, proteger interesses e oferecer orientação jurídica com compromisso, clareza e excelência.",
       },
-      { name: "author", content: "HL & Bezerra Consultoria e Assessoria" },
-      { property: "og:title", content: "HL Bezerra | Consultoria e Assessoria Empresarial" },
+      { name: "author", content: "HL & Bezerra Advocacia" },
+      { property: "og:title", content: "HL & Bezerra Advocacia | Escritório de Advocacia" },
       {
         property: "og:description",
         content:
-          "Consultoria, governança e assessoria jurídica empresarial para empresas que querem crescer com segurança e previsibilidade.",
+          "Defendemos seus direitos com compromisso e excelência. Advocacia dedicada a proteger seus interesses e garantir seus direitos.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
