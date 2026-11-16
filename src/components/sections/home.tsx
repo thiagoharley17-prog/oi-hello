@@ -7,7 +7,7 @@ import { siteMeta } from "@/data/site";
 
 export function Home() {
   return (
-    <main>
+    <div>
       <section className="relative overflow-hidden border-b bg-secondary/20">
         <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-accent/40 blur-3xl" aria-hidden="true" />
         <div className="absolute -bottom-32 left-1/3 h-80 w-80 rounded-full bg-primary/10 blur-3xl" aria-hidden="true" />
@@ -22,7 +22,7 @@ export function Home() {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
               Estratégia, governança e assessoria jurídica empresarial para transformar complexidade em decisões claras,
-              processos органиados e resultados mais previsíveis.
+              processos organizados e resultados mais previsíveis.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -95,6 +95,6 @@ export function Home() {
           ))}
         </div>
       </section>
-    </main>
+    </div>
   );
 }

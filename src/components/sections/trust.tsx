@@ -35,7 +35,7 @@ export function Trust() {
                   <MessageCircle className="h-6 w-6 shrink-0 text-primary" />
                   <div>
                     <h3 className="font-semibold">Resposta direta</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">Você fala com quem entende o processo, semScripts de venda ou pressão.</p>
+                    <p className="mt-1 text-sm text-muted-foreground">Você fala com quem entende o processo, sem scripts de venda ou pressão.</p>
                   </div>
                 </CardContent>
               </Card>

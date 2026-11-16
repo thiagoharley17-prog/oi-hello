@@ -14,4 +14,12 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+
+  it("matches the diagnostic page for /diagnostico", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+
+    const matches = router.matchRoutes("/diagnostico");
+
+    expect(matches.at(-1)?.routeId).toBe("/diagnostico");
+  });
 });
