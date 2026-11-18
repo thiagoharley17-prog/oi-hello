@@ -1,6 +1,6 @@
 const team = [
-  { name: "Hausner Leandro", role: "Advogado" },
-  { name: "Rebeca Bezerra", role: "Advogada" },
+  { name: "Hausner Leandro", role: "Advogado", portrait: "hausner-leandro", height: 797 },
+  { name: "Rebeca Bezerra", role: "Advogada", portrait: "rebeca-bezerra", height: 640 },
 ];
 
 export function Team() {
@@ -14,9 +14,18 @@ export function Team() {
           </p>
         </div>
         <ul className="grid gap-6 sm:grid-cols-2">
-          {team.map(({ name, role }) => (
+          {team.map(({ name, role, portrait, height }) => (
             <li key={name} className="border-t border-gold pt-5">
-              <h3 className="font-display text-2xl">{name}</h3>
+              <img
+                src={`/images/${portrait}.webp`}
+                alt=""
+                width={640}
+                height={height}
+                loading="lazy"
+                decoding="async"
+                className="aspect-square w-full object-cover object-[center_42%]"
+              />
+              <h3 className="mt-4 font-display text-2xl">{name}</h3>
               <p className="mt-2 text-sm text-muted-foreground">{role}</p>
             </li>
           ))}
