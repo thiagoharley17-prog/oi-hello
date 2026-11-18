@@ -1,24 +1,14 @@
-# Oi Hello
+# HL & Bezerra Advocacia
 
-oi
+Site institucional do escritório, com áreas de atuação, informações sobre a equipe e atendimento pelo WhatsApp.
 
-This project was built with [Lovable](https://lovable.dev).
+## Desenvolvimento local
 
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/41c8efac-3f76-4f5f-9d34-7d577ab3c216).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Com Node.js e npm instalados, execute:
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+npm install
 npm run dev
 ```
+
+Use `npm test` para rodar os testes e `npm run build` para gerar a versão de produção.
