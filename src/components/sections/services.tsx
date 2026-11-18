@@ -2,8 +2,8 @@ import { Link } from "@tanstack/react-router";
 import {
   ArrowUpRight,
   BriefcaseBusiness,
+  Scale,
   Building2,
-  FileText,
   Gavel,
   HeartHandshake,
   ShieldCheck,
@@ -12,9 +12,10 @@ import {
 import { services } from "@/data/site";
 
 const serviceIcons = {
-  DC: FileText,
+  DC: Scale,
   DF: HeartHandshake,
   DT: BriefcaseBusiness,
+  Scale,
   DP: Gavel,
   DCO: ShoppingBag,
   DE: Building2,
@@ -49,13 +50,10 @@ export function Services() {
                 <div>
                   <div
                     aria-hidden="true"
-                    className="mb-5 flex items-center justify-between text-primary"
+                    className="mb-5 inline-grid size-16 place-items-center rounded-xl border border-primary bg-primary p-1 text-gold"
                   >
-                    <span className="grid size-12 place-items-center bg-secondary">
-                      <Icon size={24} strokeWidth={1.5} />
-                    </span>
-                    <span className="font-display text-3xl leading-none text-primary/80">
-                      {initials}
+                    <span className="grid size-full place-items-center rounded-lg border border-gold/50">
+                      <Icon size={29} strokeWidth={1.6} />
                     </span>
                   </div>
                   <h3 className="font-display text-[1.65rem] leading-tight">{title}</h3>
