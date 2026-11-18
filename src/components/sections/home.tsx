@@ -17,7 +17,8 @@ export function Home() {
             Advocacia para pessoas e empresas
           </h1>
           <p className="mt-6 max-w-md text-base leading-7 text-primary-foreground/80 sm:text-lg">
-            Defendemos seus direitos com compromisso e excelência.
+            Defendemos seus direitos com compromisso e excelência. Oferecemos orientação jurídica
+            clara para as suas decisões.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
             <Link to="/diagnostico" className="action-link bg-gold text-gold-foreground">
