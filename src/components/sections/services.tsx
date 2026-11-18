@@ -1,4 +1,6 @@
+import { Link } from "@tanstack/react-router";
 import {
+  ArrowUpRight,
   BriefcaseBusiness,
   Building2,
   FileText,
@@ -21,36 +23,65 @@ const serviceIcons = {
 
 export function Services() {
   return (
-    <section id="servicos" className="scroll-mt-24 border-y bg-secondary">
+    <section
+      id="servicos"
+      aria-labelledby="services-heading"
+      className="scroll-mt-24 bg-primary text-primary-foreground"
+    >
       <div className="section-wrap">
-        <h2 className="section-title mt-0">Áreas de atuação</h2>
-        <ul className="mt-9 grid border-t md:grid-cols-2 md:gap-x-12">
-          {services.map(({ initials, title, description }) => {
+        <div className="max-w-2xl border-l-2 border-gold pl-5 sm:pl-7">
+          <h2 id="services-heading" className="section-title mt-0">
+            Áreas de atuação
+          </h2>
+          <p className="mt-3 text-base leading-7 text-primary-foreground/80 sm:text-lg">
+            Conheça os assuntos em que o escritório pode orientar e representar você ou sua empresa.
+          </p>
+        </div>
+
+        <ul className="mt-9 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 sm:gap-4">
+          {services.map(({ initials, title, description, bullets }) => {
             const Icon = serviceIcons[initials];
             return (
               <li
                 key={title}
-                className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-4 border-b py-6 sm:gap-5"
+                className="flex flex-col border-t-2 border-gold bg-background p-5 text-foreground sm:p-6 sm:last:col-span-full sm:last:grid sm:last:grid-cols-[minmax(0,1fr)_minmax(0,0.48fr)] sm:last:items-center sm:last:gap-x-8"
               >
-                <span
-                  aria-hidden="true"
-                  className="grid w-14 justify-items-center gap-1.5 border border-gold/40 bg-primary px-2 py-2.5 text-gold sm:w-16"
-                >
-                  <Icon size={21} strokeWidth={1.6} />
-                  <span className="text-[0.65rem] font-semibold leading-none tracking-widest">
-                    {initials}
-                  </span>
-                </span>
                 <div>
-                  <h3 className="font-display text-2xl leading-tight">{title}</h3>
-                  <p className="mt-1.5 max-w-lg text-base leading-7 text-muted-foreground">
+                  <div
+                    aria-hidden="true"
+                    className="mb-5 flex items-center justify-between text-primary"
+                  >
+                    <span className="grid size-12 place-items-center bg-secondary">
+                      <Icon size={24} strokeWidth={1.5} />
+                    </span>
+                    <span className="font-display text-3xl leading-none text-primary/80">
+                      {initials}
+                    </span>
+                  </div>
+                  <h3 className="font-display text-[1.65rem] leading-tight">{title}</h3>
+                  <p className="mt-2 max-w-xl text-base leading-relaxed text-muted-foreground">
                     {description}
                   </p>
                 </div>
+                <ul className="mt-auto grid gap-1 pt-5 text-sm leading-6">
+                  {bullets.map((topic) => (
+                    <li key={topic} className="flex items-baseline gap-2.5">
+                      <span
+                        aria-hidden="true"
+                        className="relative -top-0.5 size-1.5 shrink-0 bg-gold"
+                      />
+                      {topic}
+                    </li>
+                  ))}
+                </ul>
               </li>
             );
           })}
         </ul>
+
+        <Link to="/diagnostico" className="action-link mt-8 bg-gold text-gold-foreground">
+          Fale com o escritório <ArrowUpRight size={17} />
+        </Link>
       </div>
     </section>
   );
