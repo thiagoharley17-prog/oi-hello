@@ -10,11 +10,11 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-const sectionLinks = [
+const sectionLinks: Array<{ label: string; hash?: string; to?: "/" | "/blog" }> = [
   { label: "O escritório", hash: "escritorio" },
   { label: "Áreas de atuação", hash: "servicos" },
   { label: "Equipe", hash: "equipe" },
-  { label: "Blog", hash: "blog" },
+  { label: "Blog", to: "/blog" },
   { label: "Contato", hash: "contato" },
 ];
 
@@ -38,8 +38,8 @@ export function Header() {
           />
         </Link>
         <nav className="hidden items-center gap-6 text-sm lg:flex" aria-label="Navegação principal">
-          {sectionLinks.map(({ label, hash }) => (
-            <Link key={hash} to="/" hash={hash} className="hover:text-gold">
+          {sectionLinks.map(({ label, hash, to }) => (
+            <Link key={label} to={to ?? "/"} hash={hash} className="hover:text-gold">
               {label}
             </Link>
           ))}
@@ -67,8 +67,14 @@ export function Header() {
               <SheetDescription className="sr-only">Navegação do escritório</SheetDescription>
             </SheetHeader>
             <nav className="grid divide-y border-t" aria-label="Navegação móvel">
-              {sectionLinks.map(({ label, hash }) => (
-                <Link key={hash} to="/" hash={hash} onClick={() => setOpen(false)} className="py-3">
+              {sectionLinks.map(({ label, hash, to }) => (
+                <Link
+                  key={label}
+                  to={to ?? "/"}
+                  hash={hash}
+                  onClick={() => setOpen(false)}
+                  className="py-3"
+                >
                   {label}
                 </Link>
               ))}

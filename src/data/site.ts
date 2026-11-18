@@ -6,7 +6,6 @@ export const siteMeta = {
   phone: "(11) 99144-6606",
   whatsapp: "https://wa.me/5511991446606",
   instagram: "https://www.instagram.com/hlebezerra/",
-  blog: "https://hlbezerra.com.br/blog/",
   cta: "Falar com o escritório",
 };
 
