@@ -118,3 +118,35 @@
     text-rendering: optimizeLegibility;
   }
 }
+
+:root {
+  --background: oklch(0.983 0.01 82);
+  --foreground: oklch(0.24 0.027 187);
+  --primary: oklch(0.245 0.031 185);
+  --primary-foreground: oklch(0.98 0.01 82);
+  --secondary: oklch(0.953 0.017 82);
+  --secondary-foreground: var(--foreground);
+  --muted-foreground: oklch(0.43 0.023 178);
+  --border: oklch(0.84 0.023 84);
+  --input: oklch(0.73 0.022 84);
+  --gold: oklch(0.79 0.095 81);
+  --gold-foreground: oklch(0.23 0.028 185);
+}
+
+@layer components {
+  .section-wrap {
+    @apply mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20;
+  }
+
+  .section-label {
+    @apply text-xs font-semibold uppercase tracking-[0.16em];
+  }
+
+  .section-title {
+    @apply mt-3 font-display text-4xl leading-tight sm:text-5xl;
+  }
+
+  .action-link {
+    @apply inline-flex min-h-11 items-center gap-2 px-5 py-2.5 text-sm font-semibold transition-colors hover:brightness-95 focus-visible:outline-2 focus-visible:outline-offset-4;
+  }
+}

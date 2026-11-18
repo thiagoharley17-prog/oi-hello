@@ -3,9 +3,10 @@ export const siteMeta = {
   legalName: "HL & Bezerra Advocacia",
   description:
     "Escritório de advocacia dedicado a defender direitos, proteger interesses e oferecer orientação jurídica com compromisso, clareza e excelência.",
-  phone: "(00) 00000-0000",
-  whatsapp: "https://wa.me/5500000000000",
-  email: "contato@hlbezerra.com.br",
+  phone: "(11) 99144-6606",
+  whatsapp: "https://wa.me/5511991446606",
+  instagram: "https://www.instagram.com/hlebezerra/",
+  blog: "https://hlbezerra.com.br/blog/",
   cta: "Falar com o escritório",
 };
 
@@ -48,37 +49,44 @@ export type Service = {
 export const services: Service[] = [
   {
     title: "Direito Civil",
-    description: "Atuação preventiva e contenciosa nas relações jurídicas, contratos, obrigações, responsabilidade civil e patrimônios.",
+    description:
+      "Atuação preventiva e contenciosa nas relações jurídicas, contratos, obrigações, responsabilidade civil e patrimônios.",
     bullets: ["Contratos", "Responsabilidade civil", "Cobranças e indenizações"],
   },
   {
     title: "Direito de Família",
-    description: "Orientação cuidadosa em divórcios, guarda, pensão, inventários e planejamento sucessório, com respeito e discrição.",
+    description:
+      "Orientação cuidadosa em divórcios, guarda, pensão, inventários e planejamento sucessório, com respeito e discrição.",
     bullets: ["Guarda e visitação", "Alimentos", "Inventário"],
   },
   {
     title: "Direito do Trabalho",
-    description: "Defesa de direitos trabalhistas, acordos, verbas, rescisões e relações entre empregados e empregadores.",
+    description:
+      "Defesa de direitos trabalhistas, acordos, verbas, rescisões e relações entre empregados e empregadores.",
     bullets: ["Reclamações", "Acordos", "Assessoria a empregadores"],
   },
   {
     title: "Direito Penal",
-    description: "Acompanhamento jurídico em investigações, inquéritos, processos penais e medidas protetivas, com sigilo e firmeza.",
+    description:
+      "Acompanhamento jurídico em investigações, inquéritos, processos penais e medidas protetivas, com sigilo e firmeza.",
     bullets: ["Defesa criminal", "Medidas protetivas", "Reparação"],
   },
   {
     title: "Direito do Consumidor",
-    description: "Proteção contra práticas abusivas, produtos e serviços, cobranças indevidas e violações de direitos do consumidor.",
+    description:
+      "Proteção contra práticas abusivas, produtos e serviços, cobranças indevidas e violações de direitos do consumidor.",
     bullets: ["Cobranças indevidas", "Indenizações", "Negociações"],
   },
   {
     title: "Direito Empresarial",
-    description: "Orientação jurídica para empresas em contratos, constituição societária, responsabilidade, conformidade e relações comerciais.",
+    description:
+      "Orientação jurídica para empresas em contratos, constituição societária, responsabilidade, conformidade e relações comerciais.",
     bullets: ["Contratos", "Sociedades", "Conformidade"],
   },
   {
     title: "Direito Previdenciário",
-    description: "Planejamento, revisões, benefícios e estratégias de proteção previdenciária para pessoas e empresas.",
+    description:
+      "Planejamento, revisões, benefícios e estratégias de proteção previdenciária para pessoas e empresas.",
     bullets: ["Benefícios", "Planejamento", "Revisões"],
   },
 ];
@@ -151,7 +159,7 @@ export const faqs: FaqItem[] = [
   {
     question: "Como funciona a primeira conversa com o escritório?",
     answer:
-      "Você relata sua situação de forma reservada. Nossa equipe orienta quais informações são relevantes e qual é o próximo passo mais adequado, com clareza e sem compromisso de contratação.",
+      "Você relata sua situação de forma reservada. Nossa equipe orienta quais informações são relevantes e qual é o próximo passo mais adequado, com clareza.",
   },
   {
     question: "Quais áreas de atuação o escritório possui?",

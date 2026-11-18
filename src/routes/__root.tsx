@@ -14,8 +14,6 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/sections/header";
 import { Footer } from "@/components/sections/footer";
-import { WhatsAppFab } from "@/components/sections/whatsapp-fab";
-import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -106,7 +104,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/images/hl-bezerra-icon.png", type: "image/png" },
     ],
   }),
   shellComponent: RootShell,
@@ -137,12 +135,10 @@ function RootComponent() {
       <div className="flex min-h-screen flex-col">
         <Header />
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <main className="flex-1">
+        <main id="conteudo" className="flex-1">
           <Outlet />
         </main>
         <Footer />
-        <WhatsAppFab />
-        <Toaster position="top-right" richColors />
       </div>
     </QueryClientProvider>
   );

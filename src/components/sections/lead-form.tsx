@@ -1,115 +1,89 @@
-import { useState } from "react";
-import { CheckCircle2, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState, type FormEvent } from "react";
+import { ArrowUpRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
-import { siteMeta, services } from "@/data/site";
+import { services, siteMeta } from "@/data/site";
 
-type Status = "idle" | "submitting" | "success";
+export function LeadForm() {
+  const [preparedUrl, setPreparedUrl] = useState("");
 
-export function LeadForm({ cta = "Enviar pedido de atendimento" }: { cta?: string }) {
-  const [status, setStatus] = useState<Status>("idle");
-  const [data, setData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    area: services[0]?.title ?? "",
-    description: "",
-  });
-
-  const handleSubmit = (event: React.FormEvent) => {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setStatus("submitting");
-    const text = encodeURIComponent(
-      `Olá! Gostaria de atendimento jurídico.\n\nNome: ${data.name}\nÁrea: ${data.area}\nE-mail: ${data.email}\nWhatsApp: ${data.phone}\nDescrição: ${data.description}`
-    );
-    const url = `${siteMeta.whatsapp}?text=${text}`;
-
-    setTimeout(() => {
-      window.open(url, "_blank", "noopener,noreferrer");
-      setStatus("success");
-      toast.success("Pedido enviado!", {
-        description: `Recebemos o contato: ${data.name}. Nossa equipe fará o primeiro retorno em breve.`,
-      });
-    }, 600);
-  };
-
-  if (status === "success") {
-    return (
-      <div className="rounded-2xl border bg-card p-6 text-card-foreground shadow-sm sm:p-8">
-        <div className="flex items-start gap-4">
-          <CheckCircle2 className="h-10 w-10 shrink-0 text-gold" />
-          <div>
-            <h3 className="text-xl font-semibold">Sua solicitação foi registrada</h3>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Obrigado pelo interesse. A equipe do escritório fará o primeiro contato para entender sua necessidade
-              e apresentar o próximo passo adequado.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
+    const fields = new FormData(event.currentTarget);
+    const name = String(fields.get("name") ?? "").trim();
+    const area = String(fields.get("area") ?? "");
+    if (!name) {
+      const nameInput = event.currentTarget.elements.namedItem("name");
+      if (nameInput instanceof HTMLInputElement) {
+        nameInput.setCustomValidity("Informe seu nome.");
+        nameInput.reportValidity();
+      }
+      return;
+    }
+    const text = `Olá, meu nome é ${name}. Gostaria de conversar com o escritório.${area ? ` Área de interesse: ${area}.` : ""}`;
+    const url = new URL(siteMeta.whatsapp);
+    url.searchParams.set("text", text);
+    setPreparedUrl(url.href);
+    window.open(url.href, "_blank", "noopener,noreferrer");
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-5 rounded-2xl border bg-card p-6 text-card-foreground shadow-sm sm:p-8">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="grid gap-2">
-          <Label htmlFor="lead-name">Nome</Label>
-          <Input id="lead-name" required value={data.name} onChange={(e) => setData((d) => ({ ...d, name: e.target.value }))} placeholder="Seu nome completo" />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="lead-email">E-mail</Label>
-          <Input id="lead-email" type="email" required value={data.email} onChange={(e) => setData((d) => ({ ...d, email: e.target.value }))} placeholder="voce@exemplo.com.br" />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="lead-phone">WhatsApp</Label>
-          <Input id="lead-phone" required value={data.phone} onChange={(e) => setData((d) => ({ ...d, phone: e.target.value }))} placeholder="(00) 00000-0000" />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="lead-area">Área de interesse</Label>
-          <Select
-            name="lead-area"
-            value={data.area}
-            onValueChange={(value) => setData((d) => ({ ...d, area: value }))}
-          >
-            <SelectTrigger aria-label="Área de interesse">
-              <SelectValue placeholder="Selecione uma área" />
-            </SelectTrigger>
-            <SelectContent>
-              {services.map((service) => (
-                <SelectItem key={service.title} value={service.title}>{service.title}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
+    <form
+      onSubmit={handleSubmit}
+      onChange={() => setPreparedUrl("")}
+      className="grid gap-5 border border-border bg-background p-5 sm:p-8"
+    >
+      <h2 className="font-display text-2xl">Inicie uma conversa</h2>
       <div className="grid gap-2">
-        <Label htmlFor="lead-description">Como podemos ajudar?</Label>
-        <Textarea
-          id="lead-description"
+        <Label htmlFor="lead-name">Nome</Label>
+        <Input
+          id="lead-name"
+          name="name"
+          autoComplete="name"
+          maxLength={100}
           required
-          value={data.description}
-          onChange={(e) => setData((d) => ({ ...d, description: e.target.value }))}
-          placeholder="Relate brevemente a situação e o que você precisa resolver"
+          onInput={(event) => event.currentTarget.setCustomValidity("")}
         />
       </div>
-
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-muted-foreground">Resposta em até 1 dia útil. Seus dados são tratados com sigilo.</p>
-        <Button type="submit" size="lg" disabled={status === "submitting"} className="w-full sm:w-auto">
-          {status === "submitting" ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-          {status === "submitting" ? "Enviando..." : cta}
-        </Button>
+      <div className="grid gap-2">
+        <Label htmlFor="lead-area">Área de interesse (opcional)</Label>
+        <select
+          id="lead-area"
+          name="area"
+          className="min-h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+        >
+          <option value="">Selecione uma área</option>
+          {services.map(({ title }) => (
+            <option key={title}>{title}</option>
+          ))}
+          <option>Outra área</option>
+        </select>
       </div>
-
-      <p className="text-xs text-muted-foreground">
-        Prefere falar direto? Clique no <a href={siteMeta.whatsapp} target="_blank" rel="noreferrer" className="font-medium text-gold hover:underline">WhatsApp</a> para atendimento rápido.
+      <p className="text-sm leading-6 text-muted-foreground">
+        Você poderá revisar e enviar a mensagem no WhatsApp.
       </p>
+      <button
+        type="submit"
+        className="action-link justify-self-start bg-primary text-primary-foreground"
+      >
+        Abrir WhatsApp <ArrowUpRight size={16} />
+      </button>
+      <div role="status" className="empty:hidden">
+        {preparedUrl && (
+          <p className="text-sm leading-6">
+            Mensagem preparada. Se o aplicativo não abriu,{" "}
+            <a
+              href={preparedUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold underline"
+            >
+              abra a conversa no WhatsApp
+            </a>
+            .
+          </p>
+        )}
+      </div>
     </form>
   );
 }
