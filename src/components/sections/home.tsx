@@ -11,7 +11,7 @@ export function Home() {
         <div className="home-intro self-center px-5 pb-10 pt-14 sm:px-8 lg:py-20 lg:pr-12">
           <p className="section-label flex items-center gap-3 text-gold">
             <span aria-hidden="true" className="h-px w-8 bg-gold" />
-            HL &amp; Bezerra Advocacia
+            HL &amp; Bezerra
           </p>
           <h1 className="mt-6 max-w-xl text-balance font-display text-[clamp(2.75rem,5.2vw,5rem)] leading-[1.01] tracking-tight">
             Proteção dos direitos para pessoas e empresas
