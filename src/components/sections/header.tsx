@@ -39,7 +39,7 @@ export function Header() {
         </Link>
         <nav className="hidden items-center gap-6 text-sm lg:flex" aria-label="Navegação principal">
           {sectionLinks.map(({ label, hash, to }) => (
-            <Link key={label} to={to ?? "/"} hash={hash} className="hover:text-gold">
+            <Link key={label} to={to ?? "/"} {...(hash ? { hash } : {})} className="hover:text-gold">
               {label}
             </Link>
           ))}
@@ -71,7 +71,7 @@ export function Header() {
                 <Link
                   key={label}
                   to={to ?? "/"}
-                  hash={hash}
+                  {...(hash ? { hash } : {})}
                   onClick={() => setOpen(false)}
                   className="py-3"
                 >

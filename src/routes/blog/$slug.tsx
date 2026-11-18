@@ -1,11 +1,13 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { articles } from "@/data/articles";
+import { ArticleComments, commentsQueryOptions } from "@/components/comments/article-comments";
 
 export const Route = createFileRoute("/blog/$slug")({
-  loader: ({ params: { slug } }) => {
+  loader: async ({ params: { slug }, context }) => {
     const article = articles.find((item) => item.slug === slug);
     if (!article) throw notFound();
+    await context.queryClient.ensureQueryData(commentsQueryOptions(slug));
     return article;
   },
   component: ArticlePage,
@@ -23,7 +25,7 @@ export const Route = createFileRoute("/blog/$slug")({
 });
 
 function ArticlePage() {
-  const { title, topic, summary, image, sections } = Route.useLoaderData();
+  const { slug, title, topic, summary, image, sections, question } = Route.useLoaderData();
 
   return (
     <article>
@@ -54,6 +56,7 @@ function ArticlePage() {
               <p className="mt-3 text-base leading-8 text-muted-foreground">{text}</p>
             </section>
           ))}
+          <ArticleComments slug={slug} question={question} />
           <div className="border-t pt-6">
             <Link to="/diagnostico" className="action-link bg-primary text-primary-foreground">
               Fale com o escritório <ArrowUpRight size={16} aria-hidden="true" />

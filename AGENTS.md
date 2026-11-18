@@ -28,3 +28,8 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- Blog comments: public reads only approved rows (RLS + column grants); writes only via the `submitComment` server function with the admin client, forced to `pending`. Why: no public insert path can bypass validation, spam checks or moderation.
+- Comment moderation happens in the Lovable Cloud data panel (edit `blog_comments.status`), not an in-app admin page. Why: avoids any public admin signup surface.

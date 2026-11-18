@@ -3,6 +3,7 @@ export const articles = [
     slug: "entendendo-os-tipos-de-contratos-um-guia-pratico",
     title: "Entendendo os Tipos de Contratos: Um Guia Prático",
     topic: "Contratos",
+    question: "Qual cláusula costuma gerar mais dúvidas para você na hora de assinar um contrato?",
     summary:
       "Um contrato claro ajuda a registrar o que foi combinado e a reduzir dúvidas sobre pagamento, prazos e responsabilidades.",
     image: "/images/blog/contratos.webp",
@@ -25,6 +26,7 @@ export const articles = [
     slug: "direitos-do-consumidor-o-que-voce-precisa-saber",
     title: "Direitos do Consumidor: O Que Você Precisa Saber",
     topic: "Direito do Consumidor",
+    question: "Que comprovantes você costuma guardar depois de uma compra ou contratação?",
     summary:
       "Entenda como documentar um problema de consumo e o que observar antes de pedir troca, devolução ou correção de uma cobrança.",
     image: "/images/blog/consumidor.webp",
@@ -47,6 +49,7 @@ export const articles = [
     slug: "como-lidar-com-questoes-trabalhistas-um-guia-abrangente",
     title: "Como Lidar com Questões Trabalhistas: Um Guia Abrangente",
     topic: "Direito do Trabalho",
+    question: "Quais documentos do dia a dia de trabalho você acha mais difícil de organizar?",
     summary:
       "Saiba por onde começar ao lidar com dúvidas sobre jornada, rescisão, verbas ou condutas no ambiente de trabalho.",
     image: "/images/blog/trabalho.webp",
@@ -69,6 +72,7 @@ export const articles = [
     slug: "mediacao-e-resolucao-alternativa-de-conflitos-uma-abordagem-pratica",
     title: "Mediação e Resolução Alternativa de Conflitos: Uma Abordagem Prática",
     topic: "Mediação de conflitos",
+    question: "Em que tipo de situação você consideraria tentar uma mediação antes de outro caminho?",
     summary:
       "Quando o diálogo é possível, a mediação ajuda as partes a construir um acordo com apoio de uma pessoa imparcial.",
     image: "/images/blog/mediacao.webp",
@@ -91,6 +95,7 @@ export const articles = [
     slug: "desvendando-o-mundo-da-propriedade-intelectual",
     title: "Desvendando o Mundo da Propriedade Intelectual",
     topic: "Propriedade intelectual",
+    question: "Que dúvida você tem sobre proteger uma marca, invenção ou obra?",
     summary:
       "Marcas, invenções e obras autorais têm formas diferentes de proteção. Conheça o que avaliar antes de divulgar ou licenciar uma criação.",
     image: "/images/blog/propriedade-intelectual.webp",
@@ -113,6 +118,7 @@ export const articles = [
     slug: "como-preparar-seu-testamento-passos-importantes",
     title: "Como Preparar seu Testamento: Passos Importantes",
     topic: "Direito Sucessório",
+    question: "O que mais gera dúvida ao começar a organizar um planejamento sucessório?",
     summary:
       "Organize seus bens e suas vontades antes de discutir a forma adequada de preparar ou revisar um testamento.",
     image: "/images/blog/testamento.webp",
