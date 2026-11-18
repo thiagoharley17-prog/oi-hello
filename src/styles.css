@@ -169,3 +169,51 @@
     animation-delay: 210ms;
   }
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  .office-portrait {
+    animation: fade-in 850ms ease-out both;
+  }
+
+  .interactive-card {
+    transition: translate 220ms ease, box-shadow 220ms ease;
+  }
+
+  .interactive-card:focus-within {
+    translate: 0 -3px;
+    box-shadow: 0 12px 28px oklch(0.19 0.03 185 / 18%);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .interactive-card:hover {
+    translate: 0 -3px;
+    box-shadow: 0 12px 28px oklch(0.19 0.03 185 / 18%);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .section-reveal {
+      animation: section-enter linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+
+    .section-reveal:focus-within {
+      animation: none;
+    }
+  }
+}
+
+@keyframes section-enter {
+  from {
+    opacity: 0.62;
+    transform: translateY(22px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

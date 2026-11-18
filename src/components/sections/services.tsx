@@ -30,7 +30,7 @@ export function Services() {
       className="scroll-mt-24 bg-primary text-primary-foreground"
     >
       <div className="section-wrap">
-        <div className="max-w-2xl border-l-2 border-gold pl-5 sm:pl-7">
+        <div className="section-reveal max-w-2xl border-l-2 border-gold pl-5 sm:pl-7">
           <h2 id="services-heading" className="section-title mt-0">
             Áreas de atuação
           </h2>
@@ -45,7 +45,7 @@ export function Services() {
             return (
               <li
                 key={title}
-                className="flex flex-col border-t-2 border-gold bg-background p-5 text-foreground sm:p-6 sm:last:col-span-full sm:last:grid sm:last:grid-cols-[minmax(0,1fr)_minmax(0,0.48fr)] sm:last:items-center sm:last:gap-x-8"
+                className="section-reveal interactive-card flex flex-col border-t-2 border-gold bg-background p-5 text-foreground sm:p-6 sm:last:col-span-full sm:last:grid sm:last:grid-cols-[minmax(0,1fr)_minmax(0,0.48fr)] sm:last:items-center sm:last:gap-x-8"
               >
                 <div>
                   <div

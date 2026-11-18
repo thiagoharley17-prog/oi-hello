@@ -6,7 +6,7 @@ export function ContactSection() {
   return (
     <section id="contato" className="scroll-mt-24 bg-secondary">
       <div className="section-wrap grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-        <div>
+        <div className="section-reveal">
           <h2 className="section-title mt-0">Fale com o escritório</h2>
           <a
             href={siteMeta.whatsapp}
@@ -27,7 +27,9 @@ export function ContactSection() {
             </p>
           </address>
         </div>
-        <LeadForm />
+        <div className="section-reveal">
+          <LeadForm />
+        </div>
       </div>
     </section>
   );

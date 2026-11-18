@@ -8,13 +8,23 @@ export function ArticleList({ items }: { items: typeof articles }) {
   return (
     <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {items.map(({ title, topic, slug, image, summary }) => (
-        <li key={slug} className="flex border border-border bg-background">
+        <li
+          key={slug}
+          className="section-reveal interactive-card flex border border-border bg-background"
+        >
           <Link
             to="/blog/$slug"
             params={{ slug }}
             className="group flex w-full flex-col focus-visible:outline-2 focus-visible:outline-offset-4"
           >
-            <img src={image} alt="" loading="lazy" className="aspect-[16/9] w-full object-cover" />
+            <div className="overflow-hidden">
+              <img
+                src={image}
+                alt=""
+                loading="lazy"
+                className="aspect-[16/9] w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-[1.04]"
+              />
+            </div>
             <div className="flex flex-1 flex-col p-5 sm:p-6">
               <p className="section-label text-muted-foreground">{topic}</p>
               <h3 className="mt-2 font-display text-2xl leading-tight group-hover:underline">
@@ -36,7 +46,7 @@ export function Blog() {
   return (
     <section id="blog" className="scroll-mt-24 border-t bg-secondary">
       <div className="section-wrap">
-        <div className="flex flex-wrap items-baseline justify-between gap-4">
+        <div className="section-reveal flex flex-wrap items-baseline justify-between gap-4">
           <h2 className="section-title mt-0">Blog</h2>
           <Link to="/blog" className="text-sm font-semibold underline underline-offset-4">
             Ver todos os artigos
