@@ -1,13 +1,13 @@
 const team = [
   {
-    name: "Hausner Leandro",
+    name: "Dr. Hausner Leandro",
     role: "Advogado",
     portrait: "hausner-leandro-executivo",
     height: 797,
     position: "object-top",
   },
   {
-    name: "Rebeca Bezerra",
+    name: "Dra. Rebeca Bezerra",
     role: "Advogada",
     portrait: "rebeca-bezerra",
     height: 640,
@@ -19,12 +19,7 @@ export function Team() {
   return (
     <section id="equipe" className="scroll-mt-24">
       <div className="section-wrap grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-        <div className="section-reveal">
-          <h2 className="section-title mt-0">Nossa equipe</h2>
-          <p className="mt-4 max-w-sm leading-7 text-muted-foreground">
-            Hausner Leandro e Rebeca Bezerra atuam nas áreas cível e empresarial.
-          </p>
-        </div>
+        <h2 className="section-reveal section-title mt-0 self-start">Nossa equipe</h2>
         <ul className="grid gap-6 sm:grid-cols-2">
           {team.map(({ name, role, portrait, height, position }) => (
             <li key={name} className="section-reveal group border-t border-gold pt-5">

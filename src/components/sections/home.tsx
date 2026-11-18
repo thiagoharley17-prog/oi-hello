@@ -13,8 +13,8 @@ export function Home() {
             <span aria-hidden="true" className="h-px w-8 bg-gold" />
             HL &amp; Bezerra Advocacia
           </p>
-          <h1 className="mt-6 max-w-xl font-display text-[clamp(2.75rem,5.6vw,5.5rem)] leading-[1.01] tracking-tight">
-            Advocacia para pessoas e empresas
+          <h1 className="mt-6 max-w-xl text-balance font-display text-[clamp(2.75rem,5.2vw,5rem)] leading-[1.01] tracking-tight">
+            Proteção dos direitos para pessoas e empresas
           </h1>
           <p className="mt-6 max-w-md text-base leading-7 text-primary-foreground/80 sm:text-lg">
             Defendemos seus direitos com compromisso e excelência. Oferecemos orientação jurídica

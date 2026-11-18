@@ -3,8 +3,8 @@ export const siteMeta = {
   legalName: "HL & Bezerra Advocacia",
   description:
     "Escritório de advocacia dedicado a defender direitos, proteger interesses e oferecer orientação jurídica com compromisso, clareza e excelência.",
-  phone: "(11) 99144-6606",
-  whatsapp: "https://wa.me/5511991446606",
+  phone: "(11) 91666-9696",
+  whatsapp: "https://wa.me/5511916669696",
   instagram: "https://www.instagram.com/hlebezerra/",
   cta: "Falar com o escritório",
 };
