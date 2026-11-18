@@ -5,7 +5,7 @@ export function Home() {
   return (
     <section className="bg-primary text-primary-foreground">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 pb-10 pt-14 sm:px-8 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-14 lg:py-16">
-        <div>
+        <div className="home-intro">
           <p className="section-label text-gold">HL &amp; Bezerra Advocacia</p>
           <h1 className="mt-5 max-w-xl font-display text-[clamp(2.75rem,5.4vw,5.25rem)] leading-[1.04]">
             Advocacia para pessoas e empresas

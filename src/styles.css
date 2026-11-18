@@ -150,3 +150,21 @@
     @apply inline-flex min-h-11 items-center gap-2 px-5 py-2.5 text-sm font-semibold transition-colors hover:brightness-95 focus-visible:outline-2 focus-visible:outline-offset-4;
   }
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-intro > * {
+    animation: fade-up 550ms cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+
+  .home-intro > h1 {
+    animation-delay: 70ms;
+  }
+
+  .home-intro > h1 + p {
+    animation-delay: 140ms;
+  }
+
+  .home-intro > div {
+    animation-delay: 210ms;
+  }
+}

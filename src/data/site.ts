@@ -41,6 +41,7 @@ export const leadMagnet: LeadMagnet = {
 };
 
 export type Service = {
+  initials: "DC" | "DF" | "DT" | "DP" | "DCO" | "DE" | "DPR";
   title: string;
   description: string;
   bullets: string[];
@@ -48,42 +49,49 @@ export type Service = {
 
 export const services: Service[] = [
   {
+    initials: "DC",
     title: "Direito Civil",
     description:
       "Atuação preventiva e contenciosa nas relações jurídicas, contratos, obrigações, responsabilidade civil e patrimônios.",
     bullets: ["Contratos", "Responsabilidade civil", "Cobranças e indenizações"],
   },
   {
+    initials: "DF",
     title: "Direito de Família",
     description:
       "Orientação cuidadosa em divórcios, guarda, pensão, inventários e planejamento sucessório, com respeito e discrição.",
     bullets: ["Guarda e visitação", "Alimentos", "Inventário"],
   },
   {
+    initials: "DT",
     title: "Direito do Trabalho",
     description:
       "Defesa de direitos trabalhistas, acordos, verbas, rescisões e relações entre empregados e empregadores.",
     bullets: ["Reclamações", "Acordos", "Assessoria a empregadores"],
   },
   {
+    initials: "DP",
     title: "Direito Penal",
     description:
       "Acompanhamento jurídico em investigações, inquéritos, processos penais e medidas protetivas, com sigilo e firmeza.",
     bullets: ["Defesa criminal", "Medidas protetivas", "Reparação"],
   },
   {
+    initials: "DCO",
     title: "Direito do Consumidor",
     description:
       "Proteção contra práticas abusivas, produtos e serviços, cobranças indevidas e violações de direitos do consumidor.",
     bullets: ["Cobranças indevidas", "Indenizações", "Negociações"],
   },
   {
+    initials: "DE",
     title: "Direito Empresarial",
     description:
       "Orientação jurídica para empresas em contratos, constituição societária, responsabilidade, conformidade e relações comerciais.",
     bullets: ["Contratos", "Sociedades", "Conformidade"],
   },
   {
+    initials: "DPR",
     title: "Direito Previdenciário",
     description:
       "Planejamento, revisões, benefícios e estratégias de proteção previdenciária para pessoas e empresas.",

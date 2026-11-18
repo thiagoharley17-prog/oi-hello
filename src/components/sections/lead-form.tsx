@@ -11,6 +11,7 @@ export function LeadForm() {
     event.preventDefault();
     const fields = new FormData(event.currentTarget);
     const name = String(fields.get("name") ?? "").trim();
+    const phone = String(fields.get("phone") ?? "").trim();
     const area = String(fields.get("area") ?? "");
     if (!name) {
       const nameInput = event.currentTarget.elements.namedItem("name");
@@ -20,7 +21,7 @@ export function LeadForm() {
       }
       return;
     }
-    const text = `Olá, meu nome é ${name}. Gostaria de conversar com o escritório.${area ? ` Área de interesse: ${area}.` : ""}`;
+    const text = `Olá, meu nome é ${name}. Gostaria de conversar com o escritório.\nTelefone para retorno: ${phone}${area ? `\nÁrea de interesse: ${area}` : ""}`;
     const url = new URL(siteMeta.whatsapp);
     url.searchParams.set("text", text);
     setPreparedUrl(url.href);
@@ -46,6 +47,20 @@ export function LeadForm() {
         />
       </div>
       <div className="grid gap-2">
+        <Label htmlFor="lead-phone">Telefone para retorno</Label>
+        <Input
+          id="lead-phone"
+          name="phone"
+          type="tel"
+          autoComplete="tel"
+          placeholder="(11) 99999-9999"
+          pattern={String.raw`\+?(?:[ .\(\)\-]*[0-9]){10,15}[ .\(\)\-]*`}
+          title="Informe o telefone com DDD. Você também pode incluir o código do país."
+          maxLength={24}
+          required
+        />
+      </div>
+      <div className="grid gap-2">
         <Label htmlFor="lead-area">Área de interesse (opcional)</Label>
         <select
           id="lead-area"
@@ -60,7 +75,7 @@ export function LeadForm() {
         </select>
       </div>
       <p className="text-sm leading-6 text-muted-foreground">
-        Você poderá revisar e enviar a mensagem no WhatsApp.
+        Seu nome e telefone serão incluídos na mensagem para você revisar e enviar pelo WhatsApp.
       </p>
       <button
         type="submit"
