@@ -1,6 +1,18 @@
 const team = [
-  { name: "Hausner Leandro", role: "Advogado", portrait: "hausner-leandro", height: 797 },
-  { name: "Rebeca Bezerra", role: "Advogada", portrait: "rebeca-bezerra", height: 640 },
+  {
+    name: "Hausner Leandro",
+    role: "Advogado",
+    portrait: "hausner-leandro-executivo",
+    height: 797,
+    position: "object-top",
+  },
+  {
+    name: "Rebeca Bezerra",
+    role: "Advogada",
+    portrait: "rebeca-bezerra",
+    height: 640,
+    position: "object-[center_42%]",
+  },
 ];
 
 export function Team() {
@@ -14,7 +26,7 @@ export function Team() {
           </p>
         </div>
         <ul className="grid gap-6 sm:grid-cols-2">
-          {team.map(({ name, role, portrait, height }) => (
+          {team.map(({ name, role, portrait, height, position }) => (
             <li key={name} className="border-t border-gold pt-5">
               <img
                 src={`/images/${portrait}.webp`}
@@ -23,7 +35,7 @@ export function Team() {
                 height={height}
                 loading="lazy"
                 decoding="async"
-                className="aspect-square w-full object-cover object-[center_42%]"
+                className={`aspect-square w-full object-cover ${position}`}
               />
               <h3 className="mt-4 font-display text-2xl">{name}</h3>
               <p className="mt-2 text-sm text-muted-foreground">{role}</p>
