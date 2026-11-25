@@ -11,6 +11,7 @@ import {
   AdminTotpChallengeView,
   AdminTotpEnrollView,
 } from "@/components/admin/admin-auth-views";
+import { AdminLeads } from "@/components/admin/admin-leads";
 import { AdminDashboard } from "@/components/admin/admin-dashboard";
 
 export const Route = createFileRoute("/admin")({
@@ -44,7 +45,10 @@ const INVITE_FLAG_KEY = "hlb_admin_invite_flow";
 
 function consumeInviteFlag(): boolean {
   try {
-    if (window.location.hash.includes("type=invite") || window.location.hash.includes("type=recovery")) {
+    if (
+      window.location.hash.includes("type=invite") ||
+      window.location.hash.includes("type=recovery")
+    ) {
       return true;
     }
     return window.sessionStorage.getItem(INVITE_FLAG_KEY) === "1";
@@ -66,6 +70,7 @@ function AdminPage() {
   const fetchAdminStatus = useServerFn(getAdminSessionStatus);
 
   const [view, setView] = useState<AdminViewState>({ step: "checking" });
+  const [dashboardTab, setDashboardTab] = useState<"funnel" | "leads">("funnel");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -287,13 +292,11 @@ function AdminPage() {
 
         {view.step === "login" && (
           <div className="mx-auto max-w-md px-5 py-14 sm:py-20">
-            <AdminLoginView
-              loading={busy}
-              error={error}
-              notice={notice}
-              onSubmit={handleLogin}
-            />
-            <Link to="/admin/demo" className="mt-5 inline-block text-sm font-medium underline underline-offset-4">
+            <AdminLoginView loading={busy} error={error} notice={notice} onSubmit={handleLogin} />
+            <Link
+              to="/admin/demo"
+              className="mt-5 inline-block text-sm font-medium underline underline-offset-4"
+            >
               Explorar demonstração sem login
             </Link>
           </div>
@@ -338,6 +341,32 @@ function AdminPage() {
         )}
 
         {view.step === "dashboard" && (
+          <nav
+            aria-label="Seções do painel"
+            className="mx-auto flex max-w-7xl gap-3 px-5 pt-6 sm:px-8"
+          >
+            <button
+              type="button"
+              aria-pressed={dashboardTab === "funnel"}
+              onClick={() => setDashboardTab("funnel")}
+              className="border px-4 py-2 aria-pressed:bg-primary aria-pressed:text-primary-foreground"
+            >
+              Funil
+            </button>
+            <button
+              type="button"
+              aria-pressed={dashboardTab === "leads"}
+              onClick={() => setDashboardTab("leads")}
+              className="border px-4 py-2 aria-pressed:bg-primary aria-pressed:text-primary-foreground"
+            >
+              Leads
+            </button>
+          </nav>
+        )}
+
+        {view.step === "dashboard" && dashboardTab === "leads" && <AdminLeads />}
+
+        {view.step === "dashboard" && dashboardTab === "funnel" && (
           <AdminDashboard
             onSessionExpired={() =>
               void clearSessionState(
