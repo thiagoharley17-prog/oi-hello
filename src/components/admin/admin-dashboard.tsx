@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { ChevronLeft, ChevronRight, Loader2, RefreshCw } from "lucide-react";
+import { getDemoDashboard } from "@/lib/admin-demo";
 import { getAdminDashboardData } from "@/lib/admin.functions";
 import type {
   AdminPeriod,
@@ -58,10 +59,11 @@ function reachedStages(session: FunnelSessionRow): FunnelStage[] {
 }
 
 type DashboardProps = {
-  onSessionExpired: () => void;
+  onSessionExpired?: () => void;
+  demo?: boolean;
 };
 
-export function AdminDashboard({ onSessionExpired }: DashboardProps) {
+export function AdminDashboard({ onSessionExpired, demo = false }: DashboardProps) {
   const [period, setPeriod] = useState<AdminPeriod>("today");
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<AdminSessionStatusFilter>("all");
@@ -70,21 +72,22 @@ export function AdminDashboard({ onSessionExpired }: DashboardProps) {
   const fetchDashboard = useServerFn(getAdminDashboardData);
 
   const query = useQuery({
-    queryKey: ["admin-funnel", period, page, statusFilter, stageFilter],
+    queryKey: [demo ? "admin-funnel-demo" : "admin-funnel", period, page, statusFilter, stageFilter],
     queryFn: async () => {
+      const input = { period, page, pageSize: PAGE_SIZE, status: statusFilter, stage: stageFilter };
+      if (demo) return getDemoDashboard(input);
+
       try {
-        return await fetchDashboard({
-          data: { period, page, pageSize: PAGE_SIZE, status: statusFilter, stage: stageFilter },
-        });
+        return await fetchDashboard({ data: input });
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         if (message.includes("Unauthorized") || message.includes("FORBIDDEN_")) {
-          onSessionExpired();
+          onSessionExpired?.();
         }
         throw error;
       }
     },
-    refetchInterval: 25_000,
+    refetchInterval: demo ? false : 25_000,
     retry: false,
   });
 
@@ -109,7 +112,7 @@ export function AdminDashboard({ onSessionExpired }: DashboardProps) {
     <div className="mx-auto max-w-7xl space-y-10 px-5 py-10 sm:px-8 sm:py-12">
       <div className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-6">
         <div>
-          <p className="section-label text-muted-foreground">Acompanhamento privado</p>
+          <p className="section-label text-muted-foreground">{demo ? "Demonstração" : "Acompanhamento privado"}</p>
           <h1 className="mt-2 font-display text-3xl leading-tight sm:text-4xl">
             Funil e presença do site
           </h1>

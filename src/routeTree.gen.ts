@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
+import { Route as AdminDemoRouteImport } from './routes/admin_.demo'
 import { Route as ApiTelemetryRouteImport } from './routes/api/telemetry'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
@@ -29,6 +30,11 @@ const AdminRoute = AdminRouteImport.update({
 const DiagnosticoRoute = DiagnosticoRouteImport.update({
   id: '/diagnostico',
   path: '/diagnostico',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminDemoRoute = AdminDemoRouteImport.update({
+  id: '/admin_/demo',
+  path: '/admin/demo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiTelemetryRoute = ApiTelemetryRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/diagnostico': typeof DiagnosticoRoute
+  '/admin/demo': typeof AdminDemoRoute
   '/api/telemetry': typeof ApiTelemetryRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/diagnostico': typeof DiagnosticoRoute
+  '/admin/demo': typeof AdminDemoRoute
   '/api/telemetry': typeof ApiTelemetryRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog': typeof BlogIndexRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/diagnostico': typeof DiagnosticoRoute
+  '/admin_/demo': typeof AdminDemoRoute
   '/api/telemetry': typeof ApiTelemetryRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
@@ -78,17 +87,25 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/diagnostico'
+    | '/admin/demo'
     | '/api/telemetry'
     | '/blog/$slug'
     | '/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/admin' | '/diagnostico' | '/api/telemetry' | '/blog/$slug' | '/blog'
+    | '/'
+    | '/admin'
+    | '/diagnostico'
+    | '/admin/demo'
+    | '/api/telemetry'
+    | '/blog/$slug'
+    | '/blog'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/diagnostico'
+    | '/admin_/demo'
     | '/api/telemetry'
     | '/blog/$slug'
     | '/blog/'
@@ -98,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   DiagnosticoRoute: typeof DiagnosticoRoute
+  AdminDemoRoute: typeof AdminDemoRoute
   ApiTelemetryRoute: typeof ApiTelemetryRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -124,6 +142,13 @@ declare module '@tanstack/react-router' {
       path: '/diagnostico'
       fullPath: '/diagnostico'
       preLoaderRoute: typeof DiagnosticoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin_/demo': {
+      id: '/admin_/demo'
+      path: '/admin/demo'
+      fullPath: '/admin/demo'
+      preLoaderRoute: typeof AdminDemoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/telemetry': {
@@ -154,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   DiagnosticoRoute: DiagnosticoRoute,
+  AdminDemoRoute: AdminDemoRoute,
   ApiTelemetryRoute: ApiTelemetryRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogIndexRoute: BlogIndexRoute,

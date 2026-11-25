@@ -293,6 +293,9 @@ function AdminPage() {
               notice={notice}
               onSubmit={handleLogin}
             />
+            <Link to="/admin/demo" className="mt-5 inline-block text-sm font-medium underline underline-offset-4">
+              Explorar demonstração sem login
+            </Link>
           </div>
         )}
 

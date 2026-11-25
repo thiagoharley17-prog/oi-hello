@@ -26,3 +26,9 @@ O painel `/admin` não possui cadastro público (e o cadastro público de contas
 - Nunca são armazenados nome, telefone, e-mail, corpo de formulário, IP bruto, URLs com parâmetros ou fingerprint.
 - **Retenção:** sessões sem atividade há mais de **30 dias** são removidas automaticamente (junto com seus eventos via `ON DELETE CASCADE`) durante leituras autenticadas do painel e de forma oportunista na ingestão.
 - **Presença em tempo real:** exibida explicitamente como estimativa de sessões únicas com aba pública visível e heartbeat nos últimos **60 segundos** (envio a cada 25 s, deduplicado entre abas do mesmo navegador; abas ocultas param de enviar e `/admin` nunca é contado).
+## 4. Demonstração e implantação de teste na Vercel
+
+- `/admin/demo` exibe o painel com dados fictícios e permite testar períodos, filtros e paginação sem conta.
+- `/admin` é o acesso privado, que exige a conta autorizada e o segundo fator descritos acima.
+- Na Vercel, implante o commit que inclui as duas rotas. Use `npm run build` e deixe a opção de diretório de saída sem override: o Nitro gera `.vercel/output` com a função de servidor. Para reproduzir o empacotamento localmente, rode `VERCEL=1 npm run build`.
+- Para as funções reais na Vercel, configure `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` e `SUPABASE_SERVICE_ROLE_KEY` como variáveis do servidor, e as variáveis públicas `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` para o cliente. A chave `SUPABASE_SERVICE_ROLE_KEY` deve ficar somente no servidor. A demonstração não precisa dessas credenciais.
