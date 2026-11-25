@@ -15,6 +15,13 @@
       "when": 1794968262460,
       "tag": "0001_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795624621007,
+      "tag": "0002_create_admin_and_funnel_analytics",
+      "breakpoints": true
     }
   ]
 }

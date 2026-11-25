@@ -22,4 +22,12 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).toBe("/diagnostico");
   });
+
+  it("matches the private admin route for /admin", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+
+    const matches = router.matchRoutes("/admin");
+
+    expect(matches.at(-1)?.routeId).toBe("/admin");
+  });
 });

@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { siteMeta } from "@/data/site";
+import { trackFunnelEvent } from "@/lib/telemetry";
 
 export function Footer() {
   return (
@@ -22,7 +23,11 @@ export function Footer() {
           <a href={siteMeta.instagram} className="hover:underline">
             Instagram
           </a>
-          <a href={siteMeta.whatsapp} className="hover:underline">
+          <a
+            href={siteMeta.whatsapp}
+            onClick={() => trackFunnelEvent("whatsapp_direct_click", "footer")}
+            className="hover:underline"
+          >
             WhatsApp
           </a>
         </nav>

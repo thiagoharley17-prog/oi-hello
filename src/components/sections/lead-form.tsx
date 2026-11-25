@@ -1,11 +1,19 @@
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { services, siteMeta } from "@/data/site";
+import { trackFunnelEvent } from "@/lib/telemetry";
 
 export function LeadForm() {
   const [preparedUrl, setPreparedUrl] = useState("");
+  const startedRef = useRef(false);
+
+  function markFormStarted() {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    trackFunnelEvent("form_started", "lead_form");
+  }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -25,13 +33,18 @@ export function LeadForm() {
     const url = new URL(siteMeta.whatsapp);
     url.searchParams.set("text", text);
     setPreparedUrl(url.href);
+    trackFunnelEvent("whatsapp_attempt", "lead_form");
     window.open(url.href, "_blank", "noopener,noreferrer");
   }
 
   return (
     <form
       onSubmit={handleSubmit}
-      onChange={() => setPreparedUrl("")}
+      onFocus={markFormStarted}
+      onChange={() => {
+        markFormStarted();
+        setPreparedUrl("");
+      }}
       className="grid gap-5 border border-border bg-background p-5 sm:p-8"
     >
       <h2 className="font-display text-2xl">Inicie uma conversa</h2>
@@ -91,6 +104,7 @@ export function LeadForm() {
               href={preparedUrl}
               target="_blank"
               rel="noreferrer"
+              onClick={() => trackFunnelEvent("whatsapp_attempt", "lead_form")}
               className="font-semibold underline"
             >
               abra a conversa no WhatsApp

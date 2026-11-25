@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { LeadForm } from "@/components/sections/lead-form";
 import { siteMeta } from "@/data/site";
+import { trackFunnelEvent } from "@/lib/telemetry";
 
 export const Route = createFileRoute("/diagnostico")({
   component: Diagnostico,
@@ -18,6 +20,10 @@ export const Route = createFileRoute("/diagnostico")({
 });
 
 function Diagnostico() {
+  useEffect(() => {
+    trackFunnelEvent("contact_reached", "diagnostico", "/diagnostico");
+  }, []);
+
   return (
     <section id="formulario" className="scroll-mt-24 bg-secondary">
       <div className="section-wrap grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
@@ -35,6 +41,7 @@ function Diagnostico() {
           </p>
           <a
             href={siteMeta.whatsapp}
+            onClick={() => trackFunnelEvent("whatsapp_direct_click", "diagnostico_link", "/diagnostico")}
             className="mt-6 inline-block font-semibold underline underline-offset-4"
           >
             WhatsApp {siteMeta.phone}

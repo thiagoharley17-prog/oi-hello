@@ -33,3 +33,5 @@ use the editor.
 
 - Blog comments: public reads only approved rows (RLS + column grants); writes only via the `submitComment` server function with the admin client, forced to `pending`. Why: no public insert path can bypass validation, spam checks or moderation.
 - Comment moderation happens in the Lovable Cloud data panel (edit `blog_comments.status`), not an in-app admin page. Why: avoids any public admin signup surface.
+- Private `/admin` panel: authorization requires a pre-approved UUID in `public.admin_users` (checked already at AAL1 before TOTP enrollment) and verified `aal = 'aal2'` JWT claims enforced in both server functions (`requireSupabaseAuth`) and PostgreSQL RLS/RPCs (`is_authorized_admin_aal2`). Why: prevents unauthorized access or metric reads even via direct API calls.
+- Funnel & presence telemetry: public signals enter only via `POST /api/telemetry` (strict Zod + 512-byte limit + same-origin check + `supabaseAdmin` RPC `ingest_funnel_signal`), never direct browser table writes; `/admin` is excluded and records auto-prune after 30 days. Why: keeps raw analytics tables private, deduplicated, PII-free and bounded.

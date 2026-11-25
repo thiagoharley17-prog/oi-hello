@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          created_at: string
+          label: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          label?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          label?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       blog_comments: {
         Row: {
           article_slug: string
@@ -47,12 +65,149 @@ export type Database = {
         }
         Relationships: []
       }
+      funnel_events: {
+        Row: {
+          created_at: string
+          id: string
+          path: string
+          session_id: string
+          source: string | null
+          stage: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          path: string
+          session_id: string
+          source?: string | null
+          stage: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          path?: string
+          session_id?: string
+          source?: string | null
+          stage?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "funnel_events_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "funnel_sessions"
+            referencedColumns: ["session_id"]
+          },
+        ]
+      }
+      funnel_sessions: {
+        Row: {
+          first_path: string
+          first_seen_at: string
+          last_heartbeat_at: string | null
+          last_path: string
+          last_seen_at: string
+          last_stage: string
+          reached_contact_at: string | null
+          reached_form_started_at: string | null
+          reached_visit_at: string | null
+          reached_whatsapp_attempt_at: string | null
+          reached_whatsapp_direct_at: string | null
+          session_id: string
+        }
+        Insert: {
+          first_path: string
+          first_seen_at?: string
+          last_heartbeat_at?: string | null
+          last_path: string
+          last_seen_at?: string
+          last_stage?: string
+          reached_contact_at?: string | null
+          reached_form_started_at?: string | null
+          reached_visit_at?: string | null
+          reached_whatsapp_attempt_at?: string | null
+          reached_whatsapp_direct_at?: string | null
+          session_id: string
+        }
+        Update: {
+          first_path?: string
+          first_seen_at?: string
+          last_heartbeat_at?: string | null
+          last_path?: string
+          last_seen_at?: string
+          last_stage?: string
+          reached_contact_at?: string | null
+          reached_form_started_at?: string | null
+          reached_visit_at?: string | null
+          reached_whatsapp_attempt_at?: string | null
+          reached_whatsapp_direct_at?: string | null
+          session_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      funnel_stage_rank: { Args: { p_stage: string }; Returns: number }
+      get_admin_funnel_sessions: {
+        Args: {
+          p_page?: number
+          p_page_size?: number
+          p_period?: string
+          p_stage?: string
+          p_status?: string
+        }
+        Returns: {
+          first_path: string
+          first_seen_at: string
+          is_active: boolean
+          last_heartbeat_at: string
+          last_path: string
+          last_seen_at: string
+          last_stage: string
+          reached_contact_at: string
+          reached_form_started_at: string
+          reached_visit_at: string
+          reached_whatsapp_attempt_at: string
+          reached_whatsapp_direct_at: string
+          session_id: string
+          total_count: number
+        }[]
+      }
+      get_admin_funnel_summary: {
+        Args: { p_period?: string }
+        Returns: {
+          active_sessions: number
+          generated_at: string
+          inactive_sessions: number
+          online_now: number
+          period_start: string
+          stage_contact: number
+          stage_form_started: number
+          stage_visit: number
+          stage_whatsapp_attempt: number
+          stage_whatsapp_direct: number
+          total_sessions: number
+        }[]
+      }
+      ingest_funnel_signal: {
+        Args: {
+          p_kind: string
+          p_path: string
+          p_session_id: string
+          p_source?: string
+          p_stage?: string
+        }
+        Returns: undefined
+      }
+      is_authorized_admin: { Args: never; Returns: boolean }
+      is_authorized_admin_aal2: { Args: never; Returns: boolean }
+      prune_old_funnel_sessions: {
+        Args: { p_retention_days?: number }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never

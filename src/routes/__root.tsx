@@ -4,16 +4,23 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/sections/header";
 import { Footer } from "@/components/sections/footer";
+import {
+  sendPublicHeartbeat,
+  startPublicPresenceLoop,
+  trackFunnelEvent,
+} from "@/lib/telemetry";
+import { sanitizePublicPath } from "@/lib/telemetry.schema";
 
 function NotFoundComponent() {
   return (
@@ -129,17 +136,54 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const pathnameRef = useRef(pathname);
+  pathnameRef.current = pathname;
+  const isAdminRoute = pathname === "/admin" || pathname.startsWith("/admin/");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hash = window.location.hash;
+    if (!isAdminRoute && (hash.includes("type=invite") || hash.includes("type=recovery"))) {
+      try {
+        window.sessionStorage.setItem("hlb_admin_invite_flow", "1");
+      } catch {
+        // Ignore storage errors.
+      }
+      void router.navigate({ to: "/admin", replace: true });
+    }
+  }, [isAdminRoute, router]);
+
+  useEffect(() => {
+    if (isAdminRoute) return;
+    const sanitized = sanitizePublicPath(pathname);
+    if (!sanitized) return;
+    trackFunnelEvent("visit", "page", sanitized);
+    sendPublicHeartbeat(sanitized, false);
+  }, [isAdminRoute, pathname]);
+
+  useEffect(() => {
+    if (isAdminRoute) return;
+    return startPublicPresenceLoop(() => pathnameRef.current);
+  }, [isAdminRoute]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen flex-col">
-        <Header />
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <main id="conteudo" className="flex-1">
+      {isAdminRoute ? (
+        <div className="min-h-screen bg-background text-foreground">
           <Outlet />
-        </main>
-        <Footer />
-      </div>
+        </div>
+      ) : (
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <main id="conteudo" className="flex-1">
+            <Outlet />
+          </main>
+          <Footer />
+        </div>
+      )}
     </QueryClientProvider>
   );
 }
