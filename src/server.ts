@@ -44,6 +44,30 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+function secureResponse(request: Request, response: Response): Response {
+  const pathname = new URL(request.url).pathname;
+  const isAdmin = /^\/admin(?:\/|$)/i.test(pathname);
+  const headers = new Headers(response.headers);
+  headers.set("X-Content-Type-Options", "nosniff");
+  headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  if (headers.get("content-type")?.startsWith("text/html")) {
+    const policy = "object-src 'none'; base-uri 'self'";
+    headers.append(
+      "Content-Security-Policy",
+      isAdmin ? `${policy}; frame-ancestors 'none'` : policy,
+    );
+  }
+  if (isAdmin) {
+    headers.set("X-Frame-Options", "DENY");
+    headers.set("Cache-Control", "private, no-store");
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 // Hosting compresses every response at the edge. Never compress a body (gzip, brotli,
 // CompressionStream) or set content-encoding here or in a server route: the body gets encoded
 // twice and renders garbled.
@@ -52,13 +76,16 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      return secureResponse(request, await normalizeCatastrophicSsrResponse(response));
     } catch (error) {
       console.error(error);
-      return new Response(renderErrorPage(), {
-        status: 500,
-        headers: { "content-type": "text/html; charset=utf-8" },
-      });
+      return secureResponse(
+        request,
+        new Response(renderErrorPage(), {
+          status: 500,
+          headers: { "content-type": "text/html; charset=utf-8" },
+        }),
+      );
     }
   },
 };

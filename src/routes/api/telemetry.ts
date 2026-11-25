@@ -19,6 +19,31 @@ function isAllowedOrigin(request: Request): boolean {
   }
 }
 
+async function readTelemetryBody(request: Request): Promise<string | null> {
+  if (Number(request.headers.get("content-length")) > MAX_TELEMETRY_BYTES || !request.body) {
+    return null;
+  }
+
+  const reader = request.body.getReader();
+  const bytes = new Uint8Array(MAX_TELEMETRY_BYTES);
+  let length = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (length + value.byteLength > bytes.byteLength) {
+        void reader.cancel().catch(() => {});
+        return null;
+      }
+      bytes.set(value, length);
+      length += value.byteLength;
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  return new TextDecoder().decode(bytes.subarray(0, length));
+}
+
 export const Route = createFileRoute("/api/telemetry")({
   server: {
     handlers: {
@@ -34,8 +59,8 @@ export const Route = createFileRoute("/api/telemetry")({
           return new Response("Unsupported Media Type", { status: 415, headers: noStoreHeaders });
         }
 
-        const rawBody = await request.text();
-        if (rawBody.length === 0 || new TextEncoder().encode(rawBody).byteLength > MAX_TELEMETRY_BYTES) {
+        const rawBody = await readTelemetryBody(request);
+        if (!rawBody) {
           return new Response("Payload Too Large", { status: 413, headers: noStoreHeaders });
         }
 
