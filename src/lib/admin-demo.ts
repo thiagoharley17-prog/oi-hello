@@ -20,7 +20,7 @@ export function getDemoDashboard({
   const iso = (offset: number) => new Date(now - offset).toISOString();
   const total = { today: 24, "7d": 43, "30d": 68 }[period];
   const sessions: FunnelSessionRow[] = Array.from({ length: total }, (_, index) => {
-    const step = stages[index % stages.length];
+    const step = stages[index % stages.length] ?? "visit";
     const active = index < 3;
     const lastSeen = iso(active ? index * 10_000 : index * 180_000);
     const firstSeen = iso((index + 1) * 180_000);
