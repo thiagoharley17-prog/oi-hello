@@ -13,8 +13,8 @@ describe("telemetry validation & privacy rules", () => {
   it("strips query params and accepts valid public routes", () => {
     expect(sanitizePublicPath("/?utm_source=ads&phone=123#contato")).toBe("/");
     expect(sanitizePublicPath("/diagnostico?ref=whatsapp")).toBe("/diagnostico");
-    expect(sanitizePublicPath("/blog/contratos-empresariais-clausulas-essenciais?x=1")).toBe(
-      "/blog/contratos-empresariais-clausulas-essenciais",
+    expect(sanitizePublicPath("/blog/entendendo-os-tipos-de-contratos-um-guia-pratico?x=1")).toBe(
+      "/blog/entendendo-os-tipos-de-contratos-um-guia-pratico",
     );
   });
 
