@@ -29,6 +29,13 @@
       "when": 1795727311482,
       "tag": "0003_create_site_content",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1795728195280,
+      "tag": "0004_create_site_presets_and_editor_image_policy",
+      "breakpoints": true
     }
   ]
 }
