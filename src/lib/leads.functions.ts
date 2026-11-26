@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { setResponseHeader } from "@tanstack/react-start/server";
+import { getRequest, setResponseHeader } from "@tanstack/react-start/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { extractVerifiedAal } from "@/lib/admin.schema";
@@ -9,6 +9,9 @@ export const saveLead = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => leadInputSchema.parse(input))
   .handler(async ({ data }) => {
     setResponseHeader("Cache-Control", "no-store");
+    const { allowPublicSubmission } = await import("@/lib/public-submission-limit.server");
+    const { allowed } = await allowPublicSubmission("lead", getRequest().headers);
+    if (!allowed) return { saved: false, limited: true };
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const db = supabaseAdmin as unknown as SupabaseClient<LeadsDatabase>;
     const { error } = await db.from("site_leads").upsert(data, {
@@ -16,7 +19,7 @@ export const saveLead = createServerFn({ method: "POST" })
       ignoreDuplicates: true,
     });
 
-    return { saved: !error };
+    return { saved: !error, limited: false };
   });
 
 export const listLeads = createServerFn({ method: "GET" })

@@ -41,9 +41,15 @@ export function LeadForm() {
     setPreparedUrl("");
 
     try {
-      const { saved } = await submitLead({
+      const { saved, limited } = await submitLead({
         data: { id: submissionId.current, name, phone, email },
       });
+      if (limited) {
+        setError(
+          "Você enviou vários contatos em pouco tempo. Aguarde alguns minutos ou use o WhatsApp.",
+        );
+        return;
+      }
       if (!saved) throw new Error("LEAD_NOT_SAVED");
 
       const text = `Olá, meu nome é ${name}. Gostaria de conversar com o escritório.\nTelefone para retorno: ${phone}${area ? `\nÁrea de interesse: ${area}` : ""}`;
@@ -62,6 +68,7 @@ export function LeadForm() {
 
   return (
     <form
+      method="post"
       onSubmit={handleSubmit}
       onFocus={markFormStarted}
       onChange={() => {

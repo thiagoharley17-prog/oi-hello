@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const MIN_FILL_MS = 3000;
 export const MAX_LINKS = 1;
-export const RATE_LIMIT = { max: 3, windowMinutes: 10 };
 
 export const commentInputSchema = z.object({
   slug: z.string().trim().min(1).max(200),

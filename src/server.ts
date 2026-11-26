@@ -49,9 +49,10 @@ function secureResponse(request: Request, response: Response): Response {
   const isAdmin = /^\/admin(?:\/|$)/i.test(pathname);
   const headers = new Headers(response.headers);
   headers.set("X-Content-Type-Options", "nosniff");
+  headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   if (headers.get("content-type")?.startsWith("text/html")) {
-    const policy = "object-src 'none'; base-uri 'self'";
+    const policy = "object-src 'none'; base-uri 'self'; form-action 'self'";
     headers.append(
       "Content-Security-Policy",
       isAdmin ? `${policy}; frame-ancestors 'none'` : policy,

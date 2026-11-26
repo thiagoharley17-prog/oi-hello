@@ -95,7 +95,11 @@ export function SitePresets({
           Salve uma cópia da configuração atual, com cores, imagens, textos e seções.
         </p>
       </div>
-      <form onSubmit={(event) => void save(event)} className="flex flex-wrap items-end gap-3">
+      <form
+        method="post"
+        onSubmit={(event) => void save(event)}
+        className="flex flex-wrap items-end gap-3"
+      >
         <label className="grid flex-1 basis-56 gap-1.5 text-sm font-medium">
           Nome da predefinição
           <input

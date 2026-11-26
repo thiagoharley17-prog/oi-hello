@@ -21,21 +21,32 @@ export function AdminLoginView({ loading, error, notice, onSubmit }: LoginProps)
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-5 border border-border bg-background p-6 sm:p-8">
+    <form
+      method="post"
+      onSubmit={handleSubmit}
+      className="grid gap-5 border border-border bg-background p-6 sm:p-8"
+    >
       <div>
         <p className="section-label text-muted-foreground">Acesso restrito</p>
         <h1 className="mt-2 font-display text-3xl leading-tight">Entrar no painel</h1>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Acesso exclusivo para contas previamente autorizadas do escritório, com verificação em duas etapas (TOTP).
+          Acesso exclusivo para contas previamente autorizadas do escritório, com verificação em
+          duas etapas (TOTP).
         </p>
       </div>
       {notice && (
-        <div role="status" className="border border-gold bg-secondary px-4 py-3 text-sm text-foreground">
+        <div
+          role="status"
+          className="border border-gold bg-secondary px-4 py-3 text-sm text-foreground"
+        >
           {notice}
         </div>
       )}
       {error && (
-        <div role="alert" className="border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+        <div
+          role="alert"
+          className="border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+        >
           {error}
         </div>
       )}
@@ -85,7 +96,13 @@ type SetPasswordProps = {
   onSignOut: () => Promise<void>;
 };
 
-export function AdminSetPasswordView({ email, loading, error, onSubmit, onSignOut }: SetPasswordProps) {
+export function AdminSetPasswordView({
+  email,
+  loading,
+  error,
+  onSubmit,
+  onSignOut,
+}: SetPasswordProps) {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
@@ -107,7 +124,11 @@ export function AdminSetPasswordView({ email, loading, error, onSubmit, onSignOu
   const displayError = localError ?? error;
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-5 border border-border bg-background p-6 sm:p-8">
+    <form
+      method="post"
+      onSubmit={handleSubmit}
+      className="grid gap-5 border border-border bg-background p-6 sm:p-8"
+    >
       <div>
         <p className="section-label text-muted-foreground">Primeiro acesso</p>
         <h1 className="mt-2 font-display text-3xl leading-tight">Definir senha da conta</h1>
@@ -117,7 +138,10 @@ export function AdminSetPasswordView({ email, loading, error, onSubmit, onSignOu
         </p>
       </div>
       {displayError && (
-        <div role="alert" className="border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+        <div
+          role="alert"
+          className="border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+        >
           {displayError}
         </div>
       )}
@@ -209,23 +233,37 @@ export function AdminTotpEnrollView({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-5 border border-border bg-background p-6 sm:p-8">
+    <form
+      method="post"
+      onSubmit={handleSubmit}
+      className="grid gap-5 border border-border bg-background p-6 sm:p-8"
+    >
       <div>
         <p className="section-label text-muted-foreground">Primeiro acesso — 2FA obrigatório</p>
-        <h1 className="mt-2 font-display text-3xl leading-tight">Configurar Google Authenticator</h1>
+        <h1 className="mt-2 font-display text-3xl leading-tight">
+          Configurar Google Authenticator
+        </h1>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           {email ? `Conta autorizada: ${email}. ` : ""}
-          Escaneie o QR Code no aplicativo Google Authenticator (ou outro app TOTP) e digite o primeiro código de 6 dígitos para concluir.
+          Escaneie o QR Code no aplicativo Google Authenticator (ou outro app TOTP) e digite o
+          primeiro código de 6 dígitos para concluir.
         </p>
       </div>
       {error && (
-        <div role="alert" className="border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+        <div
+          role="alert"
+          className="border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+        >
           {error}
         </div>
       )}
       <div className="flex flex-col items-center gap-4 border border-border bg-secondary p-5">
         <div className="border border-border bg-card p-3">
-          <img src={qrCode} alt="QR Code para cadastrar no Google Authenticator" className="h-48 w-48" />
+          <img
+            src={qrCode}
+            alt="QR Code para cadastrar no Google Authenticator"
+            className="h-48 w-48"
+          />
         </div>
         <div className="w-full max-w-sm text-center">
           <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
@@ -310,7 +348,11 @@ export function AdminTotpChallengeView({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-5 border border-border bg-background p-6 sm:p-8">
+    <form
+      method="post"
+      onSubmit={handleSubmit}
+      className="grid gap-5 border border-border bg-background p-6 sm:p-8"
+    >
       <div>
         <p className="section-label text-muted-foreground">Verificação em duas etapas</p>
         <h1 className="mt-2 font-display text-3xl leading-tight">Código do autenticador</h1>
@@ -320,7 +362,10 @@ export function AdminTotpChallengeView({
         </p>
       </div>
       {error && (
-        <div role="alert" className="border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+        <div
+          role="alert"
+          className="border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+        >
           {error}
         </div>
       )}

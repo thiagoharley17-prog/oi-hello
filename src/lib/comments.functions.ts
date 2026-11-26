@@ -1,9 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeader } from "@tanstack/react-start/server";
+import { getRequest } from "@tanstack/react-start/server";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import type { Database } from "@/integrations/supabase/types";
-import { RATE_LIMIT, checkSpamSignals, commentInputSchema } from "./comments.schema";
+import { checkSpamSignals, commentInputSchema } from "./comments.schema";
 
 export type PublicComment = { id: string; display_name: string; body: string; created_at: string };
 
@@ -39,13 +39,6 @@ export const listApprovedComments = createServerFn({ method: "GET" })
     return { comments: rows ?? [], error: null };
   });
 
-async function hashSubmitter(ip: string, ua: string) {
-  const salt = process.env["SUPABASE_URL"] ?? "blog";
-  const bytes = new TextEncoder().encode(`${salt}|${ip}|${ua}`);
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
-  return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, "0")).join("");
-}
-
 export type SubmitResult = { ok: true } | { ok: false; error: string };
 
 export const submitComment = createServerFn({ method: "POST" })
@@ -56,39 +49,30 @@ export const submitComment = createServerFn({ method: "POST" })
       return { ok: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
     }
     const input = parsed.data;
+    // Silently accept bot submissions without storing them.
+    if (checkSpamSignals(input) !== "ok") return { ok: true };
+
+    const { allowPublicSubmission } = await import("@/lib/public-submission-limit.server");
+    let submitterHash: string;
+    try {
+      const { allowed, fingerprint } = await allowPublicSubmission("comment", getRequest().headers);
+      if (!allowed) {
+        return {
+          ok: false,
+          error: "Você enviou vários comentários em pouco tempo. Aguarde alguns minutos.",
+        };
+      }
+      submitterHash = fingerprint;
+    } catch {
+      return { ok: false, error: "Não foi possível enviar agora. Tente novamente mais tarde." };
+    }
+
     const { readPublishedSiteContent } = await import("@/lib/site-content.server");
     const { articles } = await readPublishedSiteContent();
     if (!articles.some((a) => a.slug === input.slug))
       return { ok: false, error: "Artigo não encontrado." };
 
-    // Silently accept bot submissions without storing them.
-    if (checkSpamSignals(input) !== "ok") return { ok: true };
-
-    const ip =
-      getRequestHeader("cf-connecting-ip") ??
-      getRequestHeader("x-forwarded-for")?.split(",")[0]?.trim() ??
-      "unknown";
-    const submitterHash = await hashSubmitter(ip, getRequestHeader("user-agent") ?? "");
-
-    // Unauthenticated writes go through the server only; public roles have no insert grant.
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const since = new Date(Date.now() - RATE_LIMIT.windowMinutes * 60_000).toISOString();
-    const { count, error: countError } = await supabaseAdmin
-      .from("blog_comments")
-      .select("id", { count: "exact", head: true })
-      .eq("submitter_hash", submitterHash)
-      .gte("created_at", since);
-    if (countError) {
-      console.error("submitComment rate check", countError);
-      return { ok: false, error: "Não foi possível enviar agora. Tente novamente mais tarde." };
-    }
-    if ((count ?? 0) >= RATE_LIMIT.max) {
-      return {
-        ok: false,
-        error: "Você enviou vários comentários em pouco tempo. Aguarde alguns minutos.",
-      };
-    }
-
     const { error } = await supabaseAdmin.from("blog_comments").insert({
       article_slug: input.slug,
       display_name: input.displayName,
@@ -97,7 +81,7 @@ export const submitComment = createServerFn({ method: "POST" })
       submitter_hash: submitterHash,
     });
     if (error) {
-      console.error("submitComment insert", error);
+      console.error("submitComment insert", error.code);
       return { ok: false, error: "Não foi possível enviar agora. Tente novamente mais tarde." };
     }
     return { ok: true };

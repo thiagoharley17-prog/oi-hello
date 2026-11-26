@@ -9,7 +9,10 @@ export const commentsQueryOptions = (slug: string) =>
     queryFn: () => listApprovedComments({ data: { slug } }),
   });
 
-const dateFmt = new Intl.DateTimeFormat("pt-BR", { dateStyle: "long", timeZone: "America/Sao_Paulo" });
+const dateFmt = new Intl.DateTimeFormat("pt-BR", {
+  dateStyle: "long",
+  timeZone: "America/Sao_Paulo",
+});
 
 export function ArticleComments({ slug, question }: { slug: string; question?: string }) {
   const { data } = useSuspenseQuery(commentsQueryOptions(slug));
@@ -78,14 +81,16 @@ export function ArticleComments({ slug, question }: { slug: string; question?: s
           {data.comments.map((c) => (
             <li key={c.id} className="border-b pb-5">
               <p className="text-sm font-semibold">{c.display_name}</p>
-              <p className="text-xs text-muted-foreground">{dateFmt.format(new Date(c.created_at))}</p>
+              <p className="text-xs text-muted-foreground">
+                {dateFmt.format(new Date(c.created_at))}
+              </p>
               <p className="mt-2 whitespace-pre-line leading-7">{c.body}</p>
             </li>
           ))}
         </ul>
       )}
 
-      <form onSubmit={onSubmit} className="mt-8 space-y-4" noValidate={false}>
+      <form method="post" onSubmit={onSubmit} className="mt-8 space-y-4" noValidate={false}>
         <h3 className="font-display text-xl">Deixe um comentário</h3>
         <p className="border border-border bg-secondary px-4 py-3 text-sm leading-6">
           Não inclua dados pessoais (CPF, telefone, e-mail, endereço) nem detalhes do seu caso. Os
@@ -96,7 +101,14 @@ export function ArticleComments({ slug, question }: { slug: string; question?: s
           <label htmlFor="comment-name" className="text-sm font-medium">
             Nome de exibição
           </label>
-          <input id="comment-name" name="displayName" required minLength={2} maxLength={60} className={fieldClass} />
+          <input
+            id="comment-name"
+            name="displayName"
+            required
+            minLength={2}
+            maxLength={60}
+            className={fieldClass}
+          />
         </div>
         <div>
           <label htmlFor="comment-body" className="text-sm font-medium">

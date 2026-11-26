@@ -55,7 +55,7 @@ export const Route = createFileRoute("/api/telemetry")({
         }
 
         const contentType = request.headers.get("content-type") ?? "";
-        if (!contentType.toLowerCase().includes("application/json")) {
+        if (contentType.split(";")[0]?.trim().toLowerCase() !== "application/json") {
           return new Response("Unsupported Media Type", { status: 415, headers: noStoreHeaders });
         }
 
@@ -79,6 +79,14 @@ export const Route = createFileRoute("/api/telemetry")({
         const signal = parsed.data;
 
         try {
+          const { allowPublicSubmission } = await import("@/lib/public-submission-limit.server");
+          const { allowed } = await allowPublicSubmission("telemetry", request.headers);
+          if (!allowed) {
+            return new Response(null, {
+              status: 429,
+              headers: { ...noStoreHeaders, "Retry-After": "600" },
+            });
+          }
           const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
           const { error } = await supabaseAdmin.rpc("ingest_funnel_signal", {
             p_session_id: signal.sessionId,
