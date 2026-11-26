@@ -145,6 +145,27 @@ export type Database = {
         }
         Relationships: []
       }
+      public_submission_limits: {
+        Row: {
+          fingerprint: string
+          hits: number
+          scope: string
+          window_start: string
+        }
+        Insert: {
+          fingerprint: string
+          hits: number
+          scope: string
+          window_start: string
+        }
+        Update: {
+          fingerprint?: string
+          hits?: number
+          scope?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       site_content: {
         Row: {
           document: Json
@@ -216,6 +237,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      allow_public_submission: {
+        Args: { p_fingerprint: string; p_scope: string }
+        Returns: boolean
+      }
       funnel_stage_rank: { Args: { p_stage: string }; Returns: number }
       get_admin_funnel_sessions: {
         Args: {
