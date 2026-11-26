@@ -1,13 +1,11 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
-import { articles } from "@/data/articles";
-import { ArticleComments, commentsQueryOptions } from "@/components/comments/article-comments";
+import { ArticleComments } from "@/components/comments/article-comments";
 
 export const Route = createFileRoute("/blog/$slug")({
-  loader: async ({ params: { slug }, context }) => {
-    const article = articles.find((item) => item.slug === slug);
+  loader: ({ params: { slug }, context }) => {
+    const article = context.siteContent.articles.find((item) => item.slug === slug);
     if (!article) throw notFound();
-    await context.queryClient.ensureQueryData(commentsQueryOptions(slug));
     return article;
   },
   component: ArticlePage,
@@ -50,8 +48,8 @@ function ArticlePage() {
           className="aspect-[16/8] w-full object-cover"
         />
         <div className="mx-auto mt-9 max-w-2xl space-y-8">
-          {sections.map(({ title: sectionTitle, text }) => (
-            <section key={sectionTitle}>
+          {sections.map(({ title: sectionTitle, text }, index) => (
+            <section key={index}>
               <h2 className="font-display text-2xl sm:text-3xl">{sectionTitle}</h2>
               <p className="mt-3 text-base leading-8 text-muted-foreground">{text}</p>
             </section>

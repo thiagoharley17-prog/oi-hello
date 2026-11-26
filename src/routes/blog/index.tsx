@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ArticleList } from "@/components/sections/blog";
-import { articles } from "@/data/articles";
+import { useSiteContent } from "@/components/sections/site-content-context";
 
 export const Route = createFileRoute("/blog/")({
   component: BlogPage,
@@ -18,10 +18,11 @@ export const Route = createFileRoute("/blog/")({
 });
 
 function BlogPage() {
+  const { articles, blogTitle } = useSiteContent();
   return (
     <section className="bg-secondary">
       <div className="section-wrap">
-        <h1 className="section-title mt-0">Blog</h1>
+        <h1 className="section-title mt-0">{blogTitle}</h1>
         <p className="mt-4 max-w-xl leading-7 text-muted-foreground">
           Artigos sobre direitos, contratos e situações jurídicas do dia a dia.
         </p>

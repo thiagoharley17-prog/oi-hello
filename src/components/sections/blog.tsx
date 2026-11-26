@@ -1,10 +1,9 @@
+import { useSiteContent } from "./site-content-context";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { articles } from "@/data/articles";
+import type { SiteContent } from "@/lib/site-content";
 
-const featured = articles.slice(0, 3);
-
-export function ArticleList({ items }: { items: typeof articles }) {
+export function ArticleList({ items }: { items: SiteContent["articles"] }) {
   return (
     <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {items.map(({ title, topic, slug, image, summary }) => (
@@ -43,16 +42,17 @@ export function ArticleList({ items }: { items: typeof articles }) {
 }
 
 export function Blog() {
+  const { blogTitle, articles } = useSiteContent();
   return (
     <section id="blog" className="scroll-mt-24 border-t bg-secondary">
       <div className="section-wrap">
         <div className="section-reveal flex flex-wrap items-baseline justify-between gap-4">
-          <h2 className="section-title mt-0">Blog</h2>
+          <h2 className="section-title mt-0">{blogTitle}</h2>
           <Link to="/blog" className="text-sm font-semibold underline underline-offset-4">
             Ver todos os artigos
           </Link>
         </div>
-        <ArticleList items={featured} />
+        <ArticleList items={articles.slice(0, 3)} />
       </div>
     </section>
   );

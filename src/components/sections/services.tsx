@@ -1,3 +1,4 @@
+import { useSiteContent } from "./site-content-context";
 import { Link } from "@tanstack/react-router";
 import {
   ArrowUpRight,
@@ -9,7 +10,6 @@ import {
   ShieldCheck,
   ShoppingBag,
 } from "lucide-react";
-import { services } from "@/data/site";
 
 const serviceIcons = {
   DC: Scale,
@@ -23,6 +23,7 @@ const serviceIcons = {
 } as const;
 
 export function Services() {
+  const { services, servicesTitle, servicesIntro } = useSiteContent();
   return (
     <section
       id="servicos"
@@ -32,19 +33,19 @@ export function Services() {
       <div className="section-wrap">
         <div className="section-reveal max-w-2xl border-l-2 border-gold pl-5 sm:pl-7">
           <h2 id="services-heading" className="section-title mt-0">
-            Áreas de atuação
+            {servicesTitle}
           </h2>
           <p className="mt-3 text-base leading-7 text-primary-foreground/80 sm:text-lg">
-            Conheça os assuntos em que o escritório pode orientar e representar você ou sua empresa.
+            {servicesIntro}
           </p>
         </div>
 
         <ul className="mt-9 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 sm:gap-4">
-          {services.map(({ initials, title, description, bullets }) => {
+          {services.map(({ initials, title, description, bullets }, index) => {
             const Icon = serviceIcons[initials];
             return (
               <li
-                key={title}
+                key={index}
                 className="section-reveal interactive-card flex flex-col border-t-2 border-gold bg-background p-5 text-foreground sm:p-6 sm:last:col-span-full sm:last:grid sm:last:grid-cols-[minmax(0,1fr)_minmax(0,0.48fr)] sm:last:items-center sm:last:gap-x-8"
               >
                 <div>
@@ -62,8 +63,8 @@ export function Services() {
                   </p>
                 </div>
                 <ul className="mt-auto grid gap-1 pt-5 text-sm leading-6">
-                  {bullets.map((topic) => (
-                    <li key={topic} className="flex items-baseline gap-2.5">
+                  {bullets.map((topic, topicIndex) => (
+                    <li key={topicIndex} className="flex items-baseline gap-2.5">
                       <span
                         aria-hidden="true"
                         className="relative -top-0.5 size-1.5 shrink-0 bg-gold"

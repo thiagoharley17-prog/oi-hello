@@ -1,3 +1,4 @@
+import { useSiteContent } from "./site-content-context";
 import { Link } from "@tanstack/react-router";
 import { Menu } from "lucide-react";
 import { useState } from "react";
@@ -19,6 +20,17 @@ const sectionLinks: Array<{ label: string; hash?: string; to?: "/" | "/blog" }> 
 ];
 
 export function Header() {
+  const { brand, sections } = useSiteContent();
+  const hashes: Record<string, string> = {
+    escritorio: "about",
+    servicos: "services",
+    equipe: "team",
+    contato: "contact",
+  };
+  const links = sectionLinks.filter(
+    ({ hash }) =>
+      !hash || sections.some((section) => section.id === hashes[hash] && section.enabled),
+  );
   const [open, setOpen] = useState(false);
 
   return (
@@ -32,14 +44,19 @@ export function Header() {
         </a>
         <Link to="/">
           <img
-            src="/images/hl-bezerra-logo.png"
-            alt="HL & Bezerra — Página inicial"
-            className="h-12 w-auto"
+            src={brand.logo}
+            alt={`${brand.name} — Página inicial`}
+            className="h-12 w-auto max-w-48 object-contain"
           />
         </Link>
         <nav className="hidden items-center gap-6 text-sm lg:flex" aria-label="Navegação principal">
-          {sectionLinks.map(({ label, hash, to }) => (
-            <Link key={label} to={to ?? "/"} {...(hash ? { hash } : {})} className="hover:text-gold">
+          {links.map(({ label, hash, to }) => (
+            <Link
+              key={label}
+              to={to ?? "/"}
+              {...(hash ? { hash } : {})}
+              className="hover:text-gold"
+            >
               {label}
             </Link>
           ))}
@@ -63,11 +80,11 @@ export function Header() {
           </SheetTrigger>
           <SheetContent side="right" className="p-6">
             <SheetHeader className="px-0">
-              <SheetTitle>HL &amp; Bezerra</SheetTitle>
+              <SheetTitle>{brand.name}</SheetTitle>
               <SheetDescription className="sr-only">Navegação do escritório</SheetDescription>
             </SheetHeader>
             <nav className="grid divide-y border-t" aria-label="Navegação móvel">
-              {sectionLinks.map(({ label, hash, to }) => (
+              {links.map(({ label, hash, to }) => (
                 <Link
                   key={label}
                   to={to ?? "/"}

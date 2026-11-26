@@ -3,13 +3,14 @@ import { getRequestHeader } from "@tanstack/react-start/server";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import type { Database } from "@/integrations/supabase/types";
-import { articles } from "@/data/articles";
 import { RATE_LIMIT, checkSpamSignals, commentInputSchema } from "./comments.schema";
 
 export type PublicComment = { id: string; display_name: string; body: string; created_at: string };
 
 export const listApprovedComments = createServerFn({ method: "GET" })
-  .inputValidator((input: { slug: string }) => z.object({ slug: z.string().min(1).max(200) }).parse(input))
+  .inputValidator((input: { slug: string }) =>
+    z.object({ slug: z.string().min(1).max(200) }).parse(input),
+  )
   .handler(async ({ data }): Promise<{ comments: PublicComment[]; error: string | null }> => {
     const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
     const client = createClient<Database>(process.env["SUPABASE_URL"]!, key, {
@@ -17,7 +18,8 @@ export const listApprovedComments = createServerFn({ method: "GET" })
       global: {
         fetch: (input, init) => {
           const h = new Headers(init?.headers);
-          if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
+          if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`)
+            h.delete("Authorization");
           h.set("apikey", key);
           return fetch(input, { ...init, headers: h });
         },
@@ -54,7 +56,10 @@ export const submitComment = createServerFn({ method: "POST" })
       return { ok: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
     }
     const input = parsed.data;
-    if (!articles.some((a) => a.slug === input.slug)) return { ok: false, error: "Artigo não encontrado." };
+    const { readPublishedSiteContent } = await import("@/lib/site-content.server");
+    const { articles } = await readPublishedSiteContent();
+    if (!articles.some((a) => a.slug === input.slug))
+      return { ok: false, error: "Artigo não encontrado." };
 
     // Silently accept bot submissions without storing them.
     if (checkSpamSignals(input) !== "ok") return { ok: true };
@@ -78,7 +83,10 @@ export const submitComment = createServerFn({ method: "POST" })
       return { ok: false, error: "Não foi possível enviar agora. Tente novamente mais tarde." };
     }
     if ((count ?? 0) >= RATE_LIMIT.max) {
-      return { ok: false, error: "Você enviou vários comentários em pouco tempo. Aguarde alguns minutos." };
+      return {
+        ok: false,
+        error: "Você enviou vários comentários em pouco tempo. Aguarde alguns minutos.",
+      };
     }
 
     const { error } = await supabaseAdmin.from("blog_comments").insert({

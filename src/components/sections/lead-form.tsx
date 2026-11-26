@@ -1,13 +1,15 @@
+import { useSiteContent } from "./site-content-context";
 import { useRef, useState, type FormEvent } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { saveLead } from "@/lib/leads.functions";
 import { ArrowUpRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { services, siteMeta } from "@/data/site";
 import { trackFunnelEvent } from "@/lib/telemetry";
 
 export function LeadForm() {
+  const { contact, services } = useSiteContent();
+  const whatsapp = `https://wa.me/${contact.whatsapp}`;
   const [preparedUrl, setPreparedUrl] = useState("");
   const startedRef = useRef(false);
 
@@ -45,7 +47,7 @@ export function LeadForm() {
       if (!saved) throw new Error("LEAD_NOT_SAVED");
 
       const text = `Olá, meu nome é ${name}. Gostaria de conversar com o escritório.\nTelefone para retorno: ${phone}${area ? `\nÁrea de interesse: ${area}` : ""}`;
-      const url = new URL(siteMeta.whatsapp);
+      const url = new URL(whatsapp);
       url.searchParams.set("text", text);
       setPreparedUrl(url.href);
     } catch {
@@ -139,7 +141,7 @@ export function LeadForm() {
         <p role="alert" className="text-sm">
           {error}{" "}
           <a
-            href={siteMeta.whatsapp}
+            href={whatsapp}
             className="underline"
             onClick={() => trackFunnelEvent("whatsapp_direct_click", "contact_section")}
           >

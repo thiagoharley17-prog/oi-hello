@@ -1,39 +1,22 @@
-const team = [
-  {
-    name: "Dr. Hausner Leandro",
-    role: "Advogado",
-    portrait: "hausner-leandro-escritorio",
-    width: 960,
-    height: 640,
-    position: "object-[56%_center]",
-  },
-  {
-    name: "Dra. Rebeca Bezerra",
-    role: "Advogada",
-    portrait: "rebeca-bezerra",
-    width: 640,
-    height: 640,
-    position: "object-[center_42%]",
-  },
-];
-
+import { useSiteContent } from "./site-content-context";
 export function Team() {
+  const { team, teamTitle } = useSiteContent();
   return (
     <section id="equipe" className="scroll-mt-24">
       <div className="section-wrap grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-        <h2 className="section-reveal section-title mt-0 self-start">Nossa equipe</h2>
+        <h2 className="section-reveal section-title mt-0 self-start">{teamTitle}</h2>
         <ul className="grid gap-6 sm:grid-cols-2">
-          {team.map(({ name, role, portrait, width, height, position }) => (
-            <li key={name} className="section-reveal group border-t border-gold pt-5">
+          {team.map(({ name, role, image }, index) => (
+            <li key={index} className="section-reveal group border-t border-gold pt-5">
               <div className="overflow-hidden">
                 <img
-                  src={`/images/${portrait}.webp`}
+                  src={image}
                   alt=""
-                  width={width}
-                  height={height}
+                  width={640}
+                  height={640}
                   loading="lazy"
                   decoding="async"
-                  className={`aspect-square w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-[1.04] ${position}`}
+                  className={`aspect-square w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-[1.04] ${image === "/images/hausner-leandro-escritorio.webp" ? "object-[56%_center]" : "object-[center_42%]"}`}
                 />
               </div>
               <h3 className="mt-4 font-display text-2xl">{name}</h3>

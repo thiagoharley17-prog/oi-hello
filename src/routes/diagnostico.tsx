@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { LeadForm } from "@/components/sections/lead-form";
-import { siteMeta } from "@/data/site";
+import { useSiteContent } from "@/components/sections/site-content-context";
 import { trackFunnelEvent } from "@/lib/telemetry";
 
 export const Route = createFileRoute("/diagnostico")({
@@ -20,6 +20,7 @@ export const Route = createFileRoute("/diagnostico")({
 });
 
 function Diagnostico() {
+  const { contact } = useSiteContent();
   useEffect(() => {
     trackFunnelEvent("contact_reached", "diagnostico", "/diagnostico");
   }, []);
@@ -40,11 +41,13 @@ function Diagnostico() {
             podem ajudar na análise do caso.
           </p>
           <a
-            href={siteMeta.whatsapp}
-            onClick={() => trackFunnelEvent("whatsapp_direct_click", "diagnostico_link", "/diagnostico")}
+            href={`https://wa.me/${contact.whatsapp}`}
+            onClick={() =>
+              trackFunnelEvent("whatsapp_direct_click", "diagnostico_link", "/diagnostico")
+            }
             className="mt-6 inline-block font-semibold underline underline-offset-4"
           >
-            WhatsApp {siteMeta.phone}
+            WhatsApp {contact.phone}
           </a>
         </div>
         <LeadForm />

@@ -1,3 +1,6 @@
+import { SiteContentContext } from "@/components/sections/site-content-context";
+import { defaultSiteContent, siteTheme } from "@/lib/site-content";
+import { getPublishedSiteContent } from "@/lib/site-content.functions";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -15,11 +18,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/sections/header";
 import { Footer } from "@/components/sections/footer";
-import {
-  sendPublicHeartbeat,
-  startPublicPresenceLoop,
-  trackFunnelEvent,
-} from "@/lib/telemetry";
+import { sendPublicHeartbeat, startPublicPresenceLoop, trackFunnelEvent } from "@/lib/telemetry";
 import { sanitizePublicPath } from "@/lib/telemetry.schema";
 
 function NotFoundComponent() {
@@ -83,7 +82,11 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
+  beforeLoad: async ({ location }) => {
+    const isAdmin = /^\/admin(?:\/|$)/.test(location.pathname);
+    return { siteContent: isAdmin ? defaultSiteContent : await getPublishedSiteContent() };
+  },
+  head: ({ match }) => ({
     // Replace these placeholders with the app's name and description when first building the app.
     // Each content route, / included, must still set its own head(). Never add og:image or
     // twitter:image here: every page without its own would inherit the root's preview image.
@@ -111,7 +114,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/images/hl-bezerra-icon.png", type: "image/png" },
+      {
+        rel: "icon",
+        href: match.context.siteContent?.brand.favicon ?? defaultSiteContent.brand.favicon,
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -135,7 +141,7 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
+  const { queryClient, siteContent } = Route.useRouteContext();
   const router = useRouter();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const pathnameRef = useRef(pathname);
@@ -175,14 +181,19 @@ function RootComponent() {
           <Outlet />
         </div>
       ) : (
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          <main id="conteudo" className="flex-1">
-            <Outlet />
-          </main>
-          <Footer />
-        </div>
+        <SiteContentContext.Provider value={siteContent}>
+          <div
+            className="flex min-h-screen flex-col bg-background text-foreground"
+            style={siteTheme(siteContent.brand)}
+          >
+            <Header />
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <main id="conteudo" className="flex-1">
+              <Outlet />
+            </main>
+            <Footer />
+          </div>
+        </SiteContentContext.Provider>
       )}
     </QueryClientProvider>
   );

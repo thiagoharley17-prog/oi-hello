@@ -11,6 +11,7 @@ import {
   AdminTotpChallengeView,
   AdminTotpEnrollView,
 } from "@/components/admin/admin-auth-views";
+import { AdminSiteEditor } from "@/components/admin/admin-site-editor";
 import { AdminLeads } from "@/components/admin/admin-leads";
 import { AdminDashboard } from "@/components/admin/admin-dashboard";
 
@@ -70,7 +71,7 @@ function AdminPage() {
   const fetchAdminStatus = useServerFn(getAdminSessionStatus);
 
   const [view, setView] = useState<AdminViewState>({ step: "checking" });
-  const [dashboardTab, setDashboardTab] = useState<"funnel" | "leads">("funnel");
+  const [dashboardTab, setDashboardTab] = useState<"funnel" | "leads" | "site">("funnel");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -343,7 +344,7 @@ function AdminPage() {
         {view.step === "dashboard" && (
           <nav
             aria-label="Seções do painel"
-            className="mx-auto flex max-w-7xl gap-3 px-5 pt-6 sm:px-8"
+            className="mx-auto flex max-w-7xl flex-wrap gap-3 px-5 pt-6 sm:px-8"
           >
             <button
               type="button"
@@ -361,7 +362,21 @@ function AdminPage() {
             >
               Leads
             </button>
+            <button
+              type="button"
+              aria-pressed={dashboardTab === "site"}
+              onClick={() => setDashboardTab("site")}
+              className="border px-4 py-2 aria-pressed:bg-primary aria-pressed:text-primary-foreground"
+            >
+              Editar site
+            </button>
           </nav>
+        )}
+
+        {view.step === "dashboard" && (
+          <div hidden={dashboardTab !== "site"}>
+            <AdminSiteEditor />
+          </div>
         )}
 
         {view.step === "dashboard" && dashboardTab === "leads" && <AdminLeads />}
