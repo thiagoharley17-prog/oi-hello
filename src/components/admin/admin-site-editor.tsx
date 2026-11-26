@@ -1,3 +1,6 @@
+import { SiteImageField } from "./site-image-field";
+import { resolveSiteImagePreviews } from "./site-image-preview";
+import { SitePresets } from "./site-presets";
 import { useState, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -30,6 +33,7 @@ const groups = [
   "Áreas e equipe",
   "Contato e perguntas",
   "Artigos",
+  "Predefinições",
 ] as const;
 type EditorData = Awaited<ReturnType<typeof getEditorContent>>;
 
@@ -187,20 +191,38 @@ function TextFields<T extends object>({
   value,
   change,
   entries,
+  onUploadState,
 }: {
   value: T;
   change: (value: T) => void;
-  entries: Array<[keyof T, string, boolean?]>;
+  onUploadState?: (uploading: boolean) => void;
+  entries: Array<[keyof T, string, (boolean | "image" | "optional-image")?]>;
 }) {
-  return entries.map(([key, label, multiline]) => (
-    <Field
-      key={String(key)}
-      label={label}
-      value={String(value[key] ?? "")}
-      multiline={Boolean(multiline)}
-      change={(text) => change({ ...value, [key]: text })}
-    />
-  ));
+  return entries.map(([key, label, kind]) => {
+    const text = String(value[key] ?? "");
+    const onChange = (next: string) => change({ ...value, [key]: next });
+    if (kind === "image" || kind === "optional-image") {
+      return (
+        <SiteImageField
+          key={String(key)}
+          label={label}
+          value={text}
+          change={onChange}
+          optional={kind === "optional-image"}
+          onUploadState={onUploadState}
+        />
+      );
+    }
+    return (
+      <Field
+        key={String(key)}
+        label={label}
+        value={text}
+        multiline={kind === true}
+        change={onChange}
+      />
+    );
+  });
 }
 
 export function AdminSiteEditor() {
@@ -241,10 +263,42 @@ export function AdminSiteEditor() {
   );
 }
 
+function SitePreview({ document }: { document: SiteContent }) {
+  const query = useQuery({
+    queryKey: ["private-site-preview", document],
+    queryFn: () => resolveSiteImagePreviews(document),
+    staleTime: 45 * 60_000,
+    gcTime: 60_000,
+    retry: false,
+  });
+  if (query.isPending)
+    return (
+      <p className="p-4" role="status">
+        Preparando prévia…
+      </p>
+    );
+  if (query.isError)
+    return (
+      <p className="p-4" role="alert">
+        Não foi possível carregar as imagens da prévia.
+      </p>
+    );
+  return (
+    <SiteContentContext.Provider value={query.data}>
+      <div inert className="bg-background text-foreground" style={siteTheme(query.data.brand)}>
+        <Header />
+        <HomePage preview />
+        <Footer />
+      </div>
+    </SiteContentContext.Provider>
+  );
+}
+
 function Editor({ initial, reload }: { initial: EditorData; reload: () => Promise<EditorData> }) {
   const [document, setDocument] = useState(initial.document);
   const [revisions, setRevisions] = useState(initial);
   const [group, setGroup] = useState<(typeof groups)[number]>("Identidade");
+  const [uploading, setUploading] = useState(false);
   const [busy, setBusy] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [failed, setFailed] = useState(false);
@@ -293,13 +347,12 @@ function Editor({ initial, reload }: { initial: EditorData; reload: () => Promis
     <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8">
       <h1 className="font-display text-4xl">Editar site</h1>
       <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
-        Edite o conteúdo, confira a prévia e publique quando estiver pronto. Para imagens e
-        logotipo, use links HTTPS ou caminhos de imagens do site.
+        Edite o conteúdo, confira a prévia e publique quando estiver pronto.
       </p>
       <div className="mt-5 flex flex-wrap gap-2">
         <Dialog>
           <DialogTrigger asChild>
-            <Button type="button" variant="outline" disabled={!validPreview.success}>
+            <Button type="button" variant="outline" disabled={uploading || !validPreview.success}>
               <Eye /> Prévia
             </Button>
           </DialogTrigger>
@@ -309,31 +362,21 @@ function Editor({ initial, reload }: { initial: EditorData; reload: () => Promis
               aria-describedby={undefined}
             >
               <DialogTitle className="p-4 pr-12">Prévia da página inicial</DialogTitle>
-              <SiteContentContext.Provider value={validPreview.data}>
-                <div
-                  inert
-                  className="bg-background text-foreground"
-                  style={siteTheme(validPreview.data.brand)}
-                >
-                  <Header />
-                  <HomePage preview />
-                  <Footer />
-                </div>
-              </SiteContentContext.Provider>
+              <SitePreview document={validPreview.data} />
             </DialogContent>
           )}
         </Dialog>
         <Button
           type="button"
           variant="outline"
-          disabled={busy || conflict}
+          disabled={busy || uploading || conflict}
           onClick={() => void save("draft")}
         >
           <Save /> Salvar rascunho
         </Button>
         <Dialog>
           <DialogTrigger asChild>
-            <Button type="button" disabled={busy || conflict}>
+            <Button type="button" disabled={busy || uploading || conflict}>
               Publicar no site
             </Button>
           </DialogTrigger>
@@ -345,7 +388,7 @@ function Editor({ initial, reload }: { initial: EditorData; reload: () => Promis
             <DialogClose asChild>
               <Button
                 type="button"
-                disabled={busy || conflict}
+                disabled={busy || uploading || conflict}
                 onClick={() => void save("published")}
               >
                 Confirmar publicação
@@ -363,7 +406,7 @@ function Editor({ initial, reload }: { initial: EditorData; reload: () => Promis
         <Button
           variant="outline"
           className="mt-3"
-          disabled={busy}
+          disabled={busy || uploading}
           onClick={async () => {
             setBusy(true);
             try {
@@ -391,23 +434,25 @@ function Editor({ initial, reload }: { initial: EditorData; reload: () => Promis
             type="button"
             variant={group === item ? "default" : "outline"}
             aria-pressed={group === item}
+            disabled={busy || uploading}
             onClick={() => setGroup(item)}
           >
             {item}
           </Button>
         ))}
       </nav>
-      <fieldset disabled={busy} className="grid min-w-0 max-w-4xl gap-6">
+      <fieldset disabled={busy || uploading} className="grid min-w-0 max-w-4xl gap-6">
         {group === "Identidade" && (
           <>
             <TextFields
               value={brand}
               change={(next) => update("brand", next)}
+              onUploadState={setUploading}
               entries={[
                 ["name", "Nome da marca"],
                 ["legalName", "Nome completo"],
-                ["logo", "URL do logotipo"],
-                ["favicon", "URL do ícone da aba"],
+                ["logo", "Logotipo", "image"],
+                ["favicon", "Ícone da aba", "image"],
               ]}
             />
             <div className="grid gap-3 sm:grid-cols-3">
@@ -438,10 +483,11 @@ function Editor({ initial, reload }: { initial: EditorData; reload: () => Promis
             <TextFields
               value={hero}
               change={(next) => update("hero", next)}
+              onUploadState={setUploading}
               entries={[
                 ["title", "Título"],
                 ["text", "Texto do banner", true],
-                ["image", "URL da imagem do banner"],
+                ["image", "Imagem do banner", "image"],
                 ["imageAlt", "Descrição da imagem"],
                 ["caption", "Legenda"],
                 ["action", "Texto do botão de atendimento"],
@@ -481,10 +527,11 @@ function Editor({ initial, reload }: { initial: EditorData; reload: () => Promis
                       <TextFields
                         value={item}
                         change={change}
+                        onUploadState={setUploading}
                         entries={[
                           ["title", "Título da seção"],
                           ["text", "Texto da seção", true],
-                          ["image", "URL da imagem opcional"],
+                          ["image", "Imagem opcional", "optional-image"],
                         ]}
                       />
                       <Collection
@@ -505,10 +552,11 @@ function Editor({ initial, reload }: { initial: EditorData; reload: () => Promis
                           <TextFields
                             value={card}
                             change={changeCard}
+                            onUploadState={setUploading}
                             entries={[
                               ["title", "Título do item"],
                               ["text", "Descrição", true],
-                              ["image", "URL da imagem opcional"],
+                              ["image", "Imagem opcional", "optional-image"],
                               ["link", "Link opcional"],
                             ]}
                           />
@@ -645,10 +693,11 @@ function Editor({ initial, reload }: { initial: EditorData; reload: () => Promis
                 <TextFields
                   value={item}
                   change={change}
+                  onUploadState={setUploading}
                   entries={[
                     ["name", "Nome"],
                     ["role", "Cargo"],
-                    ["image", "URL da foto"],
+                    ["image", "Foto", "image"],
                   ]}
                 />
               )}
@@ -740,12 +789,13 @@ function Editor({ initial, reload }: { initial: EditorData; reload: () => Promis
                   <TextFields
                     value={item}
                     change={change}
+                    onUploadState={setUploading}
                     entries={[
                       ["title", "Título do artigo"],
                       ["slug", "Endereço do artigo (exemplo: guia-de-contratos)"],
                       ["topic", "Assunto"],
                       ["summary", "Resumo", true],
-                      ["image", "URL da imagem"],
+                      ["image", "Imagem do artigo", "image"],
                       ["question", "Pergunta para comentários (opcional)"],
                     ]}
                   />
@@ -772,6 +822,17 @@ function Editor({ initial, reload }: { initial: EditorData; reload: () => Promis
               )}
             </Collection>
           </>
+        )}
+        {group === "Predefinições" && (
+          <SitePresets
+            document={document}
+            onBusy={setBusy}
+            onLoad={(next) => {
+              setDocument(next);
+              setFailed(false);
+              setFeedback("Predefinição carregada no editor. Confira a prévia antes de publicar.");
+            }}
+          />
         )}
       </fieldset>
     </section>

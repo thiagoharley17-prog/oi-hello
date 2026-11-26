@@ -16,6 +16,7 @@ import { Route as AdminDemoRouteImport } from './routes/admin_.demo'
 import { Route as ApiTelemetryRouteImport } from './routes/api/telemetry'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as ApiSiteImageNameRouteImport } from './routes/api/site-image/$name'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -52,6 +53,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSiteImageNameRoute = ApiSiteImageNameRouteImport.update({
+  id: '/api/site-image/$name',
+  path: '/api/site-image/$name',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/api/telemetry': typeof ApiTelemetryRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/api/site-image/$name': typeof ApiSiteImageNameRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/api/telemetry': typeof ApiTelemetryRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog': typeof BlogIndexRoute
+  '/api/site-image/$name': typeof ApiSiteImageNameRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/api/telemetry': typeof ApiTelemetryRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/api/site-image/$name': typeof ApiSiteImageNameRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/api/telemetry'
     | '/blog/$slug'
     | '/blog/'
+    | '/api/site-image/$name'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/api/telemetry'
     | '/blog/$slug'
     | '/blog'
+    | '/api/site-image/$name'
   id:
     | '__root__'
     | '/'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/api/telemetry'
     | '/blog/$slug'
     | '/blog/'
+    | '/api/site-image/$name'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +131,7 @@ export interface RootRouteChildren {
   ApiTelemetryRoute: typeof ApiTelemetryRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  ApiSiteImageNameRoute: typeof ApiSiteImageNameRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/site-image/$name': {
+      id: '/api/site-image/$name'
+      path: '/api/site-image/$name'
+      fullPath: '/api/site-image/$name'
+      preLoaderRoute: typeof ApiSiteImageNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -183,6 +203,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiTelemetryRoute: ApiTelemetryRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
+  ApiSiteImageNameRoute: ApiSiteImageNameRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

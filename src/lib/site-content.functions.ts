@@ -76,3 +76,45 @@ export const writeEditorContent = createServerFn({ method: "POST" })
     }
     return { revision };
   });
+
+export const listSitePresets = createServerFn({ method: "GET" })
+  .middleware([requireEditor])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("site_presets")
+      .select("id,name,created_at")
+      .order("created_at", { ascending: false });
+    if (error) throw new Error("PRESETS_READ_FAILED");
+    return data;
+  });
+
+export const getSitePreset = createServerFn({ method: "GET" })
+  .middleware([requireEditor])
+  .inputValidator(z.uuid())
+  .handler(async ({ context, data }) => {
+    const { data: row, error } = await context.supabase
+      .from("site_presets")
+      .select("document")
+      .eq("id", data)
+      .single();
+    if (error) throw new Error("PRESET_READ_FAILED");
+    return siteDraftSchema.parse(row.document);
+  });
+
+export const createSitePreset = createServerFn({ method: "POST" })
+  .middleware([requireEditor])
+  .inputValidator(
+    z.object({
+      name: z.string().trim().min(1).max(80),
+      document: siteDraftSchema,
+    }),
+  )
+  .handler(async ({ context, data }) => {
+    const { data: row, error } = await context.supabase
+      .from("site_presets")
+      .insert(data)
+      .select("id,name,created_at")
+      .single();
+    if (error) throw new Error("PRESET_WRITE_FAILED");
+    return row;
+  });
