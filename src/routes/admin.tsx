@@ -117,7 +117,10 @@ function AdminPage() {
       return;
     }
 
-    if (consumeInviteFlag()) {
+    if (
+      userRes.user.app_metadata["admin_password_change_required"] === true ||
+      consumeInviteFlag()
+    ) {
       setView({ step: "set_password", email: status.email });
       return;
     }
@@ -294,12 +297,6 @@ function AdminPage() {
         {view.step === "login" && (
           <div className="mx-auto max-w-md px-5 py-14 sm:py-20">
             <AdminLoginView loading={busy} error={error} notice={notice} onSubmit={handleLogin} />
-            <Link
-              to="/admin/demo"
-              className="mt-5 inline-block text-sm font-medium underline underline-offset-4"
-            >
-              Explorar demonstração sem login
-            </Link>
           </div>
         )}
 
