@@ -2,13 +2,8 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { ChevronLeft, ChevronRight, Loader2, RefreshCw } from "lucide-react";
-import { getDemoDashboard } from "@/lib/admin-demo";
 import { getAdminDashboardData } from "@/lib/admin.functions";
-import type {
-  AdminPeriod,
-  AdminSessionStatusFilter,
-  FunnelSessionRow,
-} from "@/lib/admin.schema";
+import type { AdminPeriod, AdminSessionStatusFilter, FunnelSessionRow } from "@/lib/admin.schema";
 import {
   ACTIVE_WINDOW_SECONDS,
   FUNNEL_STAGES,
@@ -60,10 +55,9 @@ function reachedStages(session: FunnelSessionRow): FunnelStage[] {
 
 type DashboardProps = {
   onSessionExpired?: () => void;
-  demo?: boolean;
 };
 
-export function AdminDashboard({ onSessionExpired, demo = false }: DashboardProps) {
+export function AdminDashboard({ onSessionExpired }: DashboardProps) {
   const [period, setPeriod] = useState<AdminPeriod>("today");
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<AdminSessionStatusFilter>("all");
@@ -72,11 +66,9 @@ export function AdminDashboard({ onSessionExpired, demo = false }: DashboardProp
   const fetchDashboard = useServerFn(getAdminDashboardData);
 
   const query = useQuery({
-    queryKey: [demo ? "admin-funnel-demo" : "admin-funnel", period, page, statusFilter, stageFilter],
+    queryKey: ["admin-funnel", period, page, statusFilter, stageFilter],
     queryFn: async () => {
       const input = { period, page, pageSize: PAGE_SIZE, status: statusFilter, stage: stageFilter };
-      if (demo) return getDemoDashboard(input);
-
       try {
         return await fetchDashboard({ data: input });
       } catch (error) {
@@ -87,7 +79,7 @@ export function AdminDashboard({ onSessionExpired, demo = false }: DashboardProp
         throw error;
       }
     },
-    refetchInterval: demo ? false : 25_000,
+    refetchInterval: 25_000,
     retry: false,
   });
 
@@ -112,7 +104,7 @@ export function AdminDashboard({ onSessionExpired, demo = false }: DashboardProp
     <div className="mx-auto max-w-7xl space-y-10 px-5 py-10 sm:px-8 sm:py-12">
       <div className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-6">
         <div>
-          <p className="section-label text-muted-foreground">{demo ? "Demonstração" : "Acompanhamento privado"}</p>
+          <p className="section-label text-muted-foreground">Acompanhamento privado</p>
           <h1 className="mt-2 font-display text-3xl leading-tight sm:text-4xl">
             Funil e presença do site
           </h1>
@@ -148,13 +140,19 @@ export function AdminDashboard({ onSessionExpired, demo = false }: DashboardProp
       </div>
 
       {query.isLoading && (
-        <div role="status" className="flex items-center gap-3 border border-border bg-secondary px-5 py-6 text-sm">
+        <div
+          role="status"
+          className="flex items-center gap-3 border border-border bg-secondary px-5 py-6 text-sm"
+        >
           <Loader2 size={18} className="animate-spin" /> Carregando métricas do período...
         </div>
       )}
 
       {query.isError && (
-        <div role="alert" className="flex flex-wrap items-center justify-between gap-4 border border-destructive/40 bg-destructive/10 px-5 py-4 text-sm text-destructive">
+        <div
+          role="alert"
+          className="flex flex-wrap items-center justify-between gap-4 border border-destructive/40 bg-destructive/10 px-5 py-4 text-sm text-destructive"
+        >
           <span>Não foi possível carregar os dados agora. Tente novamente.</span>
           <button
             type="button"
@@ -168,7 +166,10 @@ export function AdminDashboard({ onSessionExpired, demo = false }: DashboardProp
 
       {data && (
         <>
-          <section aria-labelledby="presenca-titulo" className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+          <section
+            aria-labelledby="presenca-titulo"
+            className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]"
+          >
             <div className="border border-border bg-primary p-6 text-primary-foreground sm:p-8">
               <p id="presenca-titulo" className="section-label text-gold">
                 Estimativa em tempo real
@@ -185,10 +186,10 @@ export function AdminDashboard({ onSessionExpired, demo = false }: DashboardProp
               </div>
               <p className="mt-4 max-w-2xl text-xs leading-5 text-primary-foreground/80">
                 Estimativa baseada em sessões únicas com página pública visível e heartbeat recente
-                (envio a cada 25 s, janela ativa de {ACTIVE_WINDOW_SECONDS} s). Abas no mesmo navegador
-                compartilham a sessão para deduplicação, abas ocultas param de enviar e o painel{" "}
-                <code className="text-gold">/admin</code> não entra na conta. Não representa contagem
-                exata de pessoas físicas únicas.
+                (envio a cada 25 s, janela ativa de {ACTIVE_WINDOW_SECONDS} s). Abas no mesmo
+                navegador compartilham a sessão para deduplicação, abas ocultas param de enviar e o
+                painel <code className="text-gold">/admin</code> não entra na conta. Não representa
+                contagem exata de pessoas físicas únicas.
               </p>
             </div>
 
@@ -202,11 +203,15 @@ export function AdminDashboard({ onSessionExpired, demo = false }: DashboardProp
               <div className="grid grid-cols-2 gap-4 border-t border-border pt-4 sm:border-t-0 sm:pt-0 lg:border-t lg:pt-4">
                 <div>
                   <p className="text-xs font-medium text-muted-foreground">Ativas agora</p>
-                  <p className="mt-1 font-display text-2xl text-foreground">{data.summary.activeSessions}</p>
+                  <p className="mt-1 font-display text-2xl text-foreground">
+                    {data.summary.activeSessions}
+                  </p>
                 </div>
                 <div>
                   <p className="text-xs font-medium text-muted-foreground">Inativas (pararam)</p>
-                  <p className="mt-1 font-display text-2xl text-foreground">{data.summary.inactiveSessions}</p>
+                  <p className="mt-1 font-display text-2xl text-foreground">
+                    {data.summary.inactiveSessions}
+                  </p>
                 </div>
               </div>
               <p className="text-xs text-muted-foreground">
@@ -249,13 +254,15 @@ export function AdminDashboard({ onSessionExpired, demo = false }: DashboardProp
                   Cliques diretos nos links de WhatsApp (rodapé, seção de contato ou /diagnostico)
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Indica intenção/abertura do link externo — não confirma envio de mensagem no aplicativo.
+                  Indica intenção/abertura do link externo — não confirma envio de mensagem no
+                  aplicativo.
                 </p>
               </div>
               <div className="text-right">
                 <p className="font-display text-3xl">{data.summary.stageWhatsappDirect}</p>
                 <p className="text-xs text-muted-foreground">
-                  {formatRate(data.summary.stageWhatsappDirect, data.summary.stageVisit)} das visitas
+                  {formatRate(data.summary.stageWhatsappDirect, data.summary.stageVisit)} das
+                  visitas
                 </p>
               </div>
             </div>
@@ -268,7 +275,8 @@ export function AdminDashboard({ onSessionExpired, demo = false }: DashboardProp
                   Sessões do período
                 </h2>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Sessões inativas (sem heartbeat há mais de {ACTIVE_WINDOW_SECONDS} s) mostram a última etapa onde pararam.
+                  Sessões inativas (sem heartbeat há mais de {ACTIVE_WINDOW_SECONDS} s) mostram a
+                  última etapa onde pararam.
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -402,10 +410,10 @@ export function AdminDashboard({ onSessionExpired, demo = false }: DashboardProp
           </section>
 
           <footer className="border-t border-border pt-5 text-xs leading-6 text-muted-foreground">
-            Privacidade e retenção: são armazenados apenas ID de sessão aleatório opaco, rotas públicas
-            sem parâmetros, etapas do funil e horários de atividade. Nenhum nome, telefone, e-mail, texto
-            de formulário, IP bruto ou fingerprint é salvo. Sessões sem atividade há mais de{" "}
-            {data.retentionDays} dias são removidas automaticamente.
+            Privacidade e retenção: são armazenados apenas ID de sessão aleatório opaco, rotas
+            públicas sem parâmetros, etapas do funil e horários de atividade. Nenhum nome, telefone,
+            e-mail, texto de formulário, IP bruto ou fingerprint é salvo. Sessões sem atividade há
+            mais de {data.retentionDays} dias são removidas automaticamente.
           </footer>
         </>
       )}
